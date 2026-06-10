@@ -5,15 +5,6 @@
     (thickness 1.6)
     (legacy_teardrops no)
   )
-  (paper "A4")
-  (title_block
-    (title "TensorRail-Mini Carrier Board")
-    (date "2026-06-09")
-    (rev "v0.1")
-    (company "TensorRail Contributors")
-    (comment 1 "ECP5 Feather Module Carrier — Simulation Prototype")
-    (comment 2 "2-layer FR4, 1.6mm, HASL, 80x50mm")
-  )
   (layers
     (0 "F.Cu" signal)
     (31 "B.Cu" signal)
@@ -106,13 +97,11 @@
   (net 34 "JTAG_TDI")
   (net 35 "JTAG_TDO")
 
-  ; ── Board outline ─────────────────────────────────────────────────────────────
   (gr_rect (start 0 0) (end 80 50)
     (stroke (width 0.05) (type solid))
     (layer "Edge.Cuts")
   )
 
-  ; ── Mounting holes MH1–MH4 (M3 NPTH, 3.2mm drill) ────────────────────────────
   (footprint "MountingHole:MountingHole_3.2mm_M3" (layer "F.Cu") (at 3 3)
     (property "Reference" "MH1" (at 0 -3) (layer "F.SilkS") (hide yes))
     (property "Value" "M3" (at 0 3) (layer "F.Fab") (hide yes))
@@ -134,7 +123,6 @@
     (pad "" np_thru_hole circle (at 0 0) (size 3.2 3.2) (drill 3.2) (layers "*.Cu" "*.Mask"))
   )
 
-  ; ── J1: USB-C Receptacle GCT USB4135-GF-A (left edge, y=25) ─────────────────
   (footprint "Connector_USB:USB_C_Receptacle_USB2.0_GCT_USB4135-GF-A_Vertical" (layer "F.Cu") (at 3 25)
     (property "Reference" "J1" (at 0 -5.5) (layer "F.SilkS"))
     (property "Value" "USB_C_PWR" (at 0 5.5) (layer "F.Fab"))
@@ -149,7 +137,6 @@
     (fp_rect (start -3.0 -3.5) (end 3.0 3.5) (stroke (width 0.12) (type solid)) (layer "F.SilkS"))
   )
 
-  ; ── D1: Schottky diode SOD-123 (VBUS protection, at 11,25) ───────────────────
   (footprint "Diode_SMD:D_SOD-123" (layer "F.Cu") (at 11 25)
     (property "Reference" "D1" (at 0 -1.8) (layer "F.SilkS"))
     (property "Value" "B5819W" (at 0 1.8) (layer "F.Fab"))
@@ -158,7 +145,6 @@
     (fp_line (start -2.0 0) (end 2.0 0) (stroke (width 0.12) (type solid)) (layer "F.SilkS"))
   )
 
-  ; ── C1, C2: USB-C bypass 100nF 0402 ──────────────────────────────────────────
   (footprint "Capacitor_SMD:C_0402_1005Metric" (layer "F.Cu") (at 15 21)
     (property "Reference" "C1" (at 0 -1.2) (layer "F.SilkS"))
     (property "Value" "100nF" (at 0 1.2) (layer "F.Fab"))
@@ -172,7 +158,6 @@
     (pad "2" smd rect (at 0.5 0) (size 1.0 1.0) (layers "F.Cu" "F.Paste" "F.Mask") (net 1 "GND"))
   )
 
-  ; ── U1: TPS62130 SOT-23-8 (3.3V buck, at 22,13) ──────────────────────────────
   (footprint "Package_TO_SOT_SMD:SOT-23-8" (layer "F.Cu") (at 22 13)
     (property "Reference" "U1" (at 0 -3.5) (layer "F.SilkS"))
     (property "Value" "TPS62130_3V3" (at 0 3.5) (layer "F.Fab"))
@@ -188,7 +173,6 @@
     (fp_text user "3V3" (at 0 0) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15))))
   )
 
-  ; ── L1: 2.2uH inductor 4x4mm (at 30,13) ─────────────────────────────────────
   (footprint "Inductor_SMD:L_4040" (layer "F.Cu") (at 30 13)
     (property "Reference" "L1" (at 0 -3.2) (layer "F.SilkS"))
     (property "Value" "2.2uH" (at 0 3.2) (layer "F.Fab"))
@@ -197,7 +181,6 @@
     (fp_rect (start -2.5 -2.2) (end 2.5 2.2) (stroke (width 0.12) (type solid)) (layer "F.SilkS"))
   )
 
-  ; ── C3-C6: Buck input/output bypass caps 0402 (3V3 section) ──────────────────
   (footprint "Capacitor_SMD:C_0402_1005Metric" (layer "F.Cu") (at 18 9)
     (property "Reference" "C3" (at 0 -1.2) (layer "F.SilkS"))
     (property "Value" "10uF" (at 0 1.2) (layer "F.Fab"))
@@ -223,7 +206,6 @@
     (pad "2" smd rect (at 0.5 0) (size 1.0 1.0) (layers "F.Cu" "F.Paste" "F.Mask") (net 1 "GND"))
   )
 
-  ; ── R3, R4: FB divider for 3V3 rail 0402 ─────────────────────────────────────
   (footprint "Resistor_SMD:R_0402_1005Metric" (layer "F.Cu") (at 22 18)
     (property "Reference" "R3" (at 0 -1.2) (layer "F.SilkS"))
     (property "Value" "464k" (at 0 1.2) (layer "F.Fab"))
@@ -237,7 +219,6 @@
     (pad "2" smd rect (at 0.5 0) (size 1.0 1.0) (layers "F.Cu" "F.Paste" "F.Mask") (net 1 "GND"))
   )
 
-  ; ── U2: TPS62130 SOT-23-8 (1.2V buck, at 22,37) ──────────────────────────────
   (footprint "Package_TO_SOT_SMD:SOT-23-8" (layer "F.Cu") (at 22 37)
     (property "Reference" "U2" (at 0 -3.5) (layer "F.SilkS"))
     (property "Value" "TPS62130_1V2" (at 0 3.5) (layer "F.Fab"))
@@ -253,7 +234,6 @@
     (fp_text user "1V2" (at 0 0) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15))))
   )
 
-  ; ── L2: 1.5uH inductor 4x4mm (at 30,37) ─────────────────────────────────────
   (footprint "Inductor_SMD:L_4040" (layer "F.Cu") (at 30 37)
     (property "Reference" "L2" (at 0 -3.2) (layer "F.SilkS"))
     (property "Value" "1.5uH" (at 0 3.2) (layer "F.Fab"))
@@ -262,7 +242,6 @@
     (fp_rect (start -2.5 -2.2) (end 2.5 2.2) (stroke (width 0.12) (type solid)) (layer "F.SilkS"))
   )
 
-  ; ── C7-C10: Buck input/output bypass caps 0402 (1V2 section) ─────────────────
   (footprint "Capacitor_SMD:C_0402_1005Metric" (layer "F.Cu") (at 18 33)
     (property "Reference" "C7" (at 0 -1.2) (layer "F.SilkS"))
     (property "Value" "10uF" (at 0 1.2) (layer "F.Fab"))
@@ -288,7 +267,6 @@
     (pad "2" smd rect (at 0.5 0) (size 1.0 1.0) (layers "F.Cu" "F.Paste" "F.Mask") (net 1 "GND"))
   )
 
-  ; ── R5, R6: FB divider for 1V2 rail 0402 ─────────────────────────────────────
   (footprint "Resistor_SMD:R_0402_1005Metric" (layer "F.Cu") (at 22 41)
     (property "Reference" "R5" (at 0 -1.2) (layer "F.SilkS"))
     (property "Value" "103k" (at 0 1.2) (layer "F.Fab"))
@@ -302,7 +280,6 @@
     (pad "2" smd rect (at 0.5 0) (size 1.0 1.0) (layers "F.Cu" "F.Paste" "F.Mask") (net 1 "GND"))
   )
 
-  ; ── U3: INA219 SOT-23-8 (current monitor, at 44,37) ──────────────────────────
   (footprint "Package_TO_SOT_SMD:SOT-23-8" (layer "F.Cu") (at 44 37)
     (property "Reference" "U3" (at 0 -3.5) (layer "F.SilkS"))
     (property "Value" "INA219" (at 0 3.5) (layer "F.Fab"))
@@ -317,7 +294,6 @@
     (fp_rect (start -2.0 -2.2) (end 2.0 2.2) (stroke (width 0.12) (type solid)) (layer "F.SilkS"))
   )
 
-  ; ── R7: Shunt resistor 0.1 Ohm 2512 (at 38,37) ───────────────────────────────
   (footprint "Resistor_SMD:R_2512_6332Metric" (layer "F.Cu") (at 38 37)
     (property "Reference" "R7" (at 0 -2.5) (layer "F.SilkS"))
     (property "Value" "0R1" (at 0 2.5) (layer "F.Fab"))
@@ -326,7 +302,6 @@
     (fp_rect (start -3.5 -1.8) (end 3.5 1.8) (stroke (width 0.12) (type solid)) (layer "F.SilkS"))
   )
 
-  ; ── C11, C12: INA219 bypass 0402 ─────────────────────────────────────────────
   (footprint "Capacitor_SMD:C_0402_1005Metric" (layer "F.Cu") (at 49 34)
     (property "Reference" "C11" (at 0 -1.2) (layer "F.SilkS"))
     (property "Value" "100nF" (at 0 1.2) (layer "F.Fab"))
@@ -340,7 +315,6 @@
     (pad "2" smd rect (at 0.5 0) (size 1.0 1.0) (layers "F.Cu" "F.Paste" "F.Mask") (net 1 "GND"))
   )
 
-  ; ── U4: W25Q128 SPI NOR Flash SOIC-8 (at 62,9) ───────────────────────────────
   (footprint "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" (layer "F.Cu") (at 62 9)
     (property "Reference" "U4" (at 0 -4.0) (layer "F.SilkS"))
     (property "Value" "W25Q128" (at 0 4.0) (layer "F.Fab"))
@@ -355,7 +329,6 @@
     (fp_rect (start -3.5 -2.7) (end 3.5 2.7) (stroke (width 0.12) (type solid)) (layer "F.SilkS"))
   )
 
-  ; ── C13, C14: Flash bypass caps 0402 ─────────────────────────────────────────
   (footprint "Capacitor_SMD:C_0402_1005Metric" (layer "F.Cu") (at 57 8)
     (property "Reference" "C13" (at 0 -1.2) (layer "F.SilkS"))
     (property "Value" "100nF" (at 0 1.2) (layer "F.Fab"))
@@ -369,7 +342,6 @@
     (pad "2" smd rect (at 0.5 0) (size 1.0 1.0) (layers "F.Cu" "F.Paste" "F.Mask") (net 1 "GND"))
   )
 
-  ; ── U5: SG-8002CA 50MHz OSC SMD 3.2x2.5mm (at 62,20) ────────────────────────
   (footprint "Oscillator:Oscillator_SMD_Epson_SG-8002CA-4Pin_3.2x2.5mm" (layer "F.Cu") (at 62 20)
     (property "Reference" "U5" (at 0 -2.8) (layer "F.SilkS"))
     (property "Value" "50MHz" (at 0 2.8) (layer "F.Fab"))
@@ -380,7 +352,6 @@
     (fp_rect (start -2.0 -1.6) (end 2.0 1.6) (stroke (width 0.12) (type solid)) (layer "F.SilkS"))
   )
 
-  ; ── C15, C16: Oscillator bypass caps 0402 ────────────────────────────────────
   (footprint "Capacitor_SMD:C_0402_1005Metric" (layer "F.Cu") (at 57 19)
     (property "Reference" "C15" (at 0 -1.2) (layer "F.SilkS"))
     (property "Value" "100nF" (at 0 1.2) (layer "F.Fab"))
@@ -394,7 +365,6 @@
     (pad "2" smd rect (at 0.5 0) (size 1.0 1.0) (layers "F.Cu" "F.Paste" "F.Mask") (net 1 "GND"))
   )
 
-  ; ── J2: JTAG 2x5 1.27mm IDC header (at 43,3 top edge) ───────────────────────
   (footprint "Connector_IDC:IDC_Header_2x05_P1.27mm_Vertical" (layer "F.Cu") (at 43 4)
     (property "Reference" "J2" (at 0 -4.5) (layer "F.SilkS"))
     (property "Value" "JTAG" (at 0 4.5) (layer "F.Fab"))
@@ -411,7 +381,6 @@
     (fp_rect (start -3.3 -3.3) (end 3.3 3.3) (stroke (width 0.12) (type solid)) (layer "F.SilkS"))
   )
 
-  ; ── J4: Feather Left socket 1x16 2.54mm (at 37,7) ───────────────────────────
   (footprint "Connector_PinSocket_2.54mm:PinSocket_1x16_P2.54mm_Vertical" (layer "F.Cu") (at 37 7)
     (property "Reference" "J4" (at -3 0) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15)) (justify right)))
     (property "Value" "FEATHER_L" (at -3 2) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15)) (justify right)))
@@ -433,7 +402,6 @@
     (pad "16" thru_hole circle (at 0  38.10) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask") (net 0  ""))
   )
 
-  ; ── J5: Feather Right socket 1x16 2.54mm (at 60,7) ──────────────────────────
   (footprint "Connector_PinSocket_2.54mm:PinSocket_1x16_P2.54mm_Vertical" (layer "F.Cu") (at 60 7)
     (property "Reference" "J5" (at 3 0) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15)) (justify left)))
     (property "Value" "FEATHER_R" (at 3 2) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15)) (justify left)))
@@ -455,7 +423,6 @@
     (pad "16" thru_hole circle (at 0  38.10) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask") (net 0  ""))
   )
 
-  ; ── J3: 40-pin expansion header 2x20 2.54mm (right edge, at 76,25) ──────────
   (footprint "Connector_PinHeader_2.54mm:PinHeader_2x20_P2.54mm_Vertical" (layer "F.Cu") (at 76 25)
     (property "Reference" "J3" (at 0 -27) (layer "F.SilkS"))
     (property "Value" "EXPANSION" (at 0 27) (layer "F.Fab"))
@@ -502,7 +469,6 @@
     (fp_rect (start -2.5 -25.5) (end 2.5 25.5) (stroke (width 0.12) (type solid)) (layer "F.SilkS"))
   )
 
-  ; ── SW1: Reset button (at 12,8) ──────────────────────────────────────────────
   (footprint "Button_Switch_SMD:SW_SPST_B3U-1000P" (layer "F.Cu") (at 12 8)
     (property "Reference" "SW1" (at 0 -2.5) (layer "F.SilkS"))
     (property "Value" "RESET" (at 0 2.5) (layer "F.Fab"))
@@ -512,7 +478,6 @@
     (fp_text user "RST" (at 0 -1.8) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15)) (justify center)))
   )
 
-  ; ── SW2: Boot button (at 12,42) ──────────────────────────────────────────────
   (footprint "Button_Switch_SMD:SW_SPST_B3U-1000P" (layer "F.Cu") (at 12 42)
     (property "Reference" "SW2" (at 0 -2.5) (layer "F.SilkS"))
     (property "Value" "BOOT" (at 0 2.5) (layer "F.Fab"))
@@ -522,7 +487,6 @@
     (fp_text user "BOOT" (at 0 -1.8) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15)) (justify center)))
   )
 
-  ; ── R18, R19: Button pull-ups 10k 0402 ───────────────────────────────────────
   (footprint "Resistor_SMD:R_0402_1005Metric" (layer "F.Cu") (at 18 5)
     (property "Reference" "R18" (at 0 -1.2) (layer "F.SilkS"))
     (property "Value" "10k" (at 0 1.2) (layer "F.Fab"))
@@ -536,7 +500,6 @@
     (pad "2" smd rect (at 0.5 0) (size 1.0 1.0) (layers "F.Cu" "F.Paste" "F.Mask") (net 13 "BOOT_N"))
   )
 
-  ; ── C17, C18: Button debounce 100nF 0402 ─────────────────────────────────────
   (footprint "Capacitor_SMD:C_0402_1005Metric" (layer "F.Cu") (at 17 9)
     (property "Reference" "C17" (at 0 -1.2) (layer "F.SilkS"))
     (property "Value" "100nF" (at 0 1.2) (layer "F.Fab"))
@@ -550,7 +513,6 @@
     (pad "2" smd rect (at 0.5 0) (size 1.0 1.0) (layers "F.Cu" "F.Paste" "F.Mask") (net 1 "GND"))
   )
 
-  ; ── D2-D5: Status LEDs 0402 ───────────────────────────────────────────────────
   (footprint "LED_SMD:LED_0402_1005Metric" (layer "F.Cu") (at 70 38)
     (property "Reference" "D2" (at 0 -1.5) (layer "F.SilkS"))
     (property "Value" "LED_PWR" (at 0 1.5) (layer "F.Fab"))
@@ -576,7 +538,6 @@
     (pad "A" smd rect (at  0.5 0) (size 1.0 1.0) (layers "F.Cu" "F.Paste" "F.Mask") (net 29 "LED_HB_A"))
   )
 
-  ; ── R20-R23: LED series resistors 330R 0402 ───────────────────────────────────
   (footprint "Resistor_SMD:R_0402_1005Metric" (layer "F.Cu") (at 65 38)
     (property "Reference" "R20" (at 0 -1.2) (layer "F.SilkS"))
     (property "Value" "330R" (at 0 1.2) (layer "F.Fab"))
@@ -602,7 +563,6 @@
     (pad "2" smd rect (at  0.5 0) (size 1.0 1.0) (layers "F.Cu" "F.Paste" "F.Mask") (net 29 "LED_HB_A"))
   )
 
-  ; ── Test points TP1-TP7 ───────────────────────────────────────────────────────
   (footprint "TestPoint:TestPoint_SMD_Pad_D1.5mm" (layer "F.Cu") (at 75 3)
     (property "Reference" "TP1" (at 0 -2) (layer "F.SilkS"))
     (property "Value" "+5V" (at 0 2) (layer "F.Fab"))
@@ -639,41 +599,29 @@
     (pad "1" smd circle (at 0 0) (size 1.5 1.5) (layers "F.Cu" "F.Paste" "F.Mask") (net 8 "RESET_N"))
   )
 
-  ; ── Power rail traces F.Cu 1.0mm ─────────────────────────────────────────────
 
-  ; J1 VBUS to C1/C2 and D1
   (segment (start 4.6 25) (end 9.5 25) (width 1.0) (layer "F.Cu") (net 2))
   (segment (start 9.5 25) (end 13 25) (width 1.0) (layer "F.Cu") (net 2))
-  ; D1 anode (VBUS_RAW) to U1 VIN
   (segment (start 12.5 25) (end 17 25) (width 1.0) (layer "F.Cu") (net 19))
   (segment (start 17 25) (end 17 13) (width 1.0) (layer "F.Cu") (net 19))
   (segment (start 17 13) (end 20.6 13) (width 1.0) (layer "F.Cu") (net 19))
-  ; U1 SW to L1 pad1
   (segment (start 23.4 12.5) (end 28 12.5) (width 1.0) (layer "F.Cu") (net 22))
-  ; L1 pad2 to +3V3 bus
   (segment (start 32 13) (end 55 13) (width 1.0) (layer "F.Cu") (net 3))
   (segment (start 35 9) (end 35 13) (width 0.5) (layer "F.Cu") (net 3))
-  ; +3V3 bus down to U2 input
   (segment (start 35 13) (end 35 33) (width 1.0) (layer "F.Cu") (net 3))
   (segment (start 35 33) (end 20.6 33) (width 1.0) (layer "F.Cu") (net 3))
-  ; U2 SW to L2 pad1
   (segment (start 23.4 36.5) (end 28 36.5) (width 1.0) (layer "F.Cu") (net 24))
-  ; L2 pad2 to +1V2 bus
   (segment (start 32 37) (end 35.5 37) (width 1.0) (layer "F.Cu") (net 4))
   (segment (start 35 33) (end 35 37) (width 0.5) (layer "F.Cu") (net 4))
-  ; +3V3 to oscillator area
   (segment (start 55 13) (end 57 13) (width 0.8) (layer "F.Cu") (net 3))
   (segment (start 57 11) (end 57 13) (width 0.5) (layer "F.Cu") (net 3))
   (segment (start 57 13) (end 62 13) (width 0.8) (layer "F.Cu") (net 3))
-  ; TP rail stubs
   (segment (start 73 3) (end 75 3) (width 0.5) (layer "F.Cu") (net 2))
   (segment (start 73 8) (end 75 8) (width 0.5) (layer "F.Cu") (net 3))
   (segment (start 73 13) (end 75 13) (width 0.5) (layer "F.Cu") (net 4))
   (segment (start 73 18) (end 75 18) (width 0.5) (layer "F.Cu") (net 1))
 
-  ; ── Signal traces F.Cu 0.25mm ─────────────────────────────────────────────────
 
-  ; SPI bus: Feather left J4 pads → U4 flash
   (segment (start 37 25.40) (end 56 25.40) (width 0.25) (layer "F.Cu") (net 11))
   (segment (start 56 25.40) (end 56 7.37)  (width 0.25) (layer "F.Cu") (net 11))
   (segment (start 56 7.37)  (end 59.3 7.37)(width 0.25) (layer "F.Cu") (net 11))
@@ -683,25 +631,20 @@
   (segment (start 37 20.32) (end 54 20.32) (width 0.25) (layer "F.Cu") (net 9))
   (segment (start 54 20.32) (end 54 16)    (width 0.25) (layer "F.Cu") (net 9))
   (segment (start 54 16)    (end 59.3 16)  (width 0.25) (layer "F.Cu") (net 9))
-  ; SPI_CS from Feather right J5
   (segment (start 60 12.70) (end 64 12.70) (width 0.25) (layer "F.Cu") (net 12))
   (segment (start 64 12.70) (end 64 11.43) (width 0.25) (layer "F.Cu") (net 12))
   (segment (start 64 11.43) (end 64.7 11.43)(width 0.25) (layer "F.Cu") (net 12))
-  ; CLK_50M from OSC pad3 to Feather area
   (segment (start 63.5 19.1) (end 63.5 15) (width 0.25) (layer "F.Cu") (net 7))
   (segment (start 63.5 15)   (end 52 15)   (width 0.25) (layer "F.Cu") (net 7))
   (segment (start 52 15)     (end 52 20.32)(width 0.25) (layer "F.Cu") (net 7))
-  ; UART TPs to Feather
   (segment (start 6 3)  (end 37 3)    (width 0.25) (layer "F.Cu") (net 14))
   (segment (start 37 3) (end 37 30.48)(width 0.25) (layer "F.Cu") (net 14))
   (segment (start 6 8)  (end 38 8)    (width 0.25) (layer "F.Cu") (net 15))
   (segment (start 38 8) (end 38 27.94)(width 0.25) (layer "F.Cu") (net 15))
-  ; RESET_N TP to Feather and pull-up
   (segment (start 6 13)  (end 18.5 13)(width 0.25) (layer "F.Cu") (net 8))
   (segment (start 18.5 13)(end 18.5 7)(width 0.25) (layer "F.Cu") (net 8))
   (segment (start 18.5 7) (end 37 7)  (width 0.25) (layer "F.Cu") (net 8))
   (segment (start 37 7)   (end 37 0)  (width 0.25) (layer "F.Cu") (net 8))
-  ; LED signals from Feather right
   (segment (start 60 20.32) (end 63 20.32)(width 0.25) (layer "F.Cu") (net 16))
   (segment (start 63 20.32) (end 63 38)  (width 0.25) (layer "F.Cu") (net 16))
   (segment (start 63 38)    (end 64.5 38)(width 0.25) (layer "F.Cu") (net 16))
@@ -711,7 +654,6 @@
   (segment (start 60 25.40) (end 64 25.40)(width 0.25) (layer "F.Cu") (net 18))
   (segment (start 64 25.40) (end 64 45.5)(width 0.25) (layer "F.Cu") (net 18))
   (segment (start 64 45.5)  (end 64.5 45.5)(width 0.25) (layer "F.Cu") (net 18))
-  ; SCL/SDA from Feather right to INA219
   (segment (start 60 30.48) (end 52 30.48)(width 0.25) (layer "F.Cu") (net 5))
   (segment (start 52 30.48) (end 52 37)  (width 0.25) (layer "F.Cu") (net 5))
   (segment (start 52 37)    (end 45.4 37)(width 0.25) (layer "F.Cu") (net 5))
@@ -719,7 +661,6 @@
   (segment (start 53 27.94) (end 53 37.6)(width 0.25) (layer "F.Cu") (net 6))
   (segment (start 53 37.6)  (end 45.4 37.6)(width 0.25) (layer "F.Cu") (net 6))
 
-  ; ── Silkscreen ────────────────────────────────────────────────────────────────
   (gr_text "TensorRail-Mini v0.1" (at 40 2) (layer "F.SilkS")
     (effects (font (size 2.0 2.0) (thickness 0.3)) (justify center))
   )
@@ -734,7 +675,6 @@
   (gr_text "1V2 BUCK" (at 24 34) (layer "F.SilkS") (effects (font (size 0.9 0.9) (thickness 0.14)) (justify center)))
   (gr_text "INA219"   (at 44 34) (layer "F.SilkS") (effects (font (size 0.9 0.9) (thickness 0.14)) (justify center)))
 
-  ; Feather module area dashed outline
   (gr_rect (start 33 5) (end 64 47)
     (stroke (width 0.2) (type dash))
     (layer "F.SilkS")
@@ -746,7 +686,6 @@
     (effects (font (size 1.2 1.2) (thickness 0.18)) (justify center))
   )
 
-  ; ── B.Cu GND zone full-board fill ─────────────────────────────────────────────
   (zone (net 1) (net_name "GND") (layer "B.Cu") (name "GND_pour")
     (hatch full 0.508)
     (connect_pads (clearance 0.3))
@@ -760,7 +699,6 @@
     )
   )
 
-  ; ── F.Cu GND pour left power section ──────────────────────────────────────────
   (zone (net 1) (net_name "GND") (layer "F.Cu") (name "GND_top_left")
     (hatch full 0.508)
     (connect_pads (clearance 0.3))
