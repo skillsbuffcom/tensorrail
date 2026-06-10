@@ -2,3 +2,9 @@
 .claude/
 out/
 rtl/sim/tb_sa
+# Local Codex repair backups
+hardware/*.ai_draft.kicad_sch
+hardware/*_backup.kicad_sch
+hardware/*_backup.kicad_pcb
+hardware/*.proper_rebuild_backup.kicad_sch
+hardware/*.proper_rebuild_backup.kicad_pcb
