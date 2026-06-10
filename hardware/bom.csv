@@ -1,0 +1,36 @@
+Reference,Value,Manufacturer,MPN,Footprint,Qty,Unit_USD,Ext_USD,LCSC,Mouser,Description
+J1,USB-C Receptacle 5A,GCT,USB4135-GF-A,Connector_USB:USB_C_Receptacle_USB2.0_GCT_USB4135-GF-A_Vertical,1,0.90,0.90,C165948,640-USB4135-GF-A,USB Type-C receptacle - power-only 5V input
+J2,JTAG 2x5 1.27mm,Samtec,FTSH-105-01-L-DV,Connector_IDC:IDC_Header_2x05_P1.27mm_Vertical,1,1.20,1.20,C160404,200-FTSH10501LDVM,10-pin 1.27mm JTAG header for ECP5 programming
+J3,Expansion 2x20 2.54mm,Generic,PH-2x20-2.54,Connector_PinHeader_2.54mm:PinHeader_2x20_P2.54mm_Vertical,1,0.95,0.95,C124378,,40-pin GPIO/power expansion header
+J4,Feather Header Left,Generic,PH-1x16-2.54,Connector_PinSocket_2.54mm:PinSocket_1x16_P2.54mm_Vertical,1,0.35,0.35,C65112,,1x16 female header - FPGA module socket left
+J5,Feather Header Right,Generic,PH-1x16-2.54,Connector_PinSocket_2.54mm:PinSocket_1x16_P2.54mm_Vertical,1,0.35,0.35,C65112,,1x16 female header - FPGA module socket right
+U1,TPS62130 3.3V Buck,Texas Instruments,TPS62130ARGTR,Package_TO_SOT_SMD:SOT-23-8,1,1.80,1.80,C389584,595-TPS62130ARGTR,3.3V synchronous buck regulator for FPGA I/O and logic rail
+U2,TPS62130 1.2V Buck,Texas Instruments,TPS62130ARGTR,Package_TO_SOT_SMD:SOT-23-8,1,1.80,1.80,C389584,595-TPS62130ARGTR,1.2V synchronous buck regulator for ECP5 core rail
+U3,INA219 Current Monitor,Texas Instruments,INA219AIDCNT,Package_TO_SOT_SMD:SOT-23-8,1,1.35,1.35,C154691,595-INA219AIDCNT,I2C high-side current and power monitor on 1.2V rail
+U4,W25Q128 SPI NOR Flash,Winbond,W25Q128JVSIQ,Package_SO:SOIC-8_3.9x4.9mm_P1.27mm,1,0.75,0.75,C97521,454-W25Q128JVSIQ,128Mbit SPI flash for configuration/test payloads
+U5,50MHz CMOS Oscillator,Epson,SG-8002CA-50.000000MHz,Oscillator:Oscillator_SMD_Epson_SG-8002CA-4Pin_3.2x2.5mm,1,1.10,1.10,C97670,732-SG8002CA,3.3V 50MHz reference oscillator
+D1,Schottky 1A 40V,Nexperia,PMEG4010CEJ,Diode_SMD:D_SOD-123,1,0.12,0.12,C460665,771-PMEG4010CEJL,Reverse-polarity / VBUS isolation diode
+D2-D5,LED Green 0402,Wurth Elektronik,150040GS75000,LED_SMD:LED_0402_1005Metric,4,0.04,0.16,C72043,710-150040GS75000,Power/busy/done/heartbeat status indicators
+L1,2.2uH 3A Inductor,Wurth Elektronik,744043220,Inductor_SMD:L_4040,1,0.45,0.45,C408367,710-744043220,3.3V buck output inductor
+L2,1.5uH 3A Inductor,Wurth Elektronik,744043150,Inductor_SMD:L_4040,1,0.45,0.45,C408366,710-744043150,1.2V buck output inductor
+C1-C2,100nF 25V X7R 0402,Yageo,CC0402KRX7R9BB104,Capacitor_SMD:C_0402_1005Metric,2,0.005,0.01,C307331,603-CC0402KRX7R9BB104,USB-C input high-frequency bypass
+C3,C7,10uF 10V X5R 0402,Samsung,CL05A106MP5NUNC,Capacitor_SMD:C_0402_1005Metric,2,0.06,0.12,C15525,187-CL05A106MP5NUNC,Buck input bulk bypass
+C4,C6,C8,C10-C13,C15,C17-C18,100nF 25V X7R 0402,Yageo,CC0402KRX7R9BB104,Capacitor_SMD:C_0402_1005Metric,9,0.005,0.045,C307331,603-CC0402KRX7R9BB104,Regulator/INA219/flash/oscillator/button bypass
+C5,C9,100uF 10V X5R 1210,Murata,GRM32ER61A107ME20L,Capacitor_SMD:C_1210_3225Metric,2,0.32,0.64,C96882,81-GRM32ER61A107ME20L,Buck output bulk capacitors
+C14,C16,10nF 25V X7R 0402,Yageo,CC0402KRX7R9BB103,Capacitor_SMD:C_0402_1005Metric,2,0.004,0.008,C15195,603-CC0402KRX7R9BB103,Flash/oscillator local high-frequency bypass
+R1-R2,5k1 1% 0402,Yageo,RC0402FR-075K1L,Resistor_SMD:R_0402_1005Metric,2,0.002,0.004,C23186,603-RC0402FR-075K1L,USB-C CC1/CC2 Rd pulldowns for default 5V sink mode
+R3,464k 1% 0402,Yageo,RC0402FR-07464KL,Resistor_SMD:R_0402_1005Metric,1,0.002,0.002,C25807,603-RC0402FR-07464KL,3.3V buck feedback top resistor
+R4,R6,100k 1% 0402,Yageo,RC0402FR-07100KL,Resistor_SMD:R_0402_1005Metric,2,0.002,0.004,C25087,603-RC0402FR-07100KL,Buck feedback bottom resistors
+R5,103k 1% 0402,Yageo,RC0402FR-07103KL,Resistor_SMD:R_0402_1005Metric,1,0.002,0.002,C25803,603-RC0402FR-07103KL,1.2V buck feedback top resistor
+R7,0.1R 1W 2512,Vishay,WSLP2512R1000FEB,Resistor_SMD:R_2512_6332Metric,1,0.55,0.55,C76298,71-WSLP2512R1000FEB,Current shunt for INA219 rail telemetry
+R10-R11,R18-R19,10k 1% 0402,Yageo,RC0402FR-0710KL,Resistor_SMD:R_0402_1005Metric,4,0.002,0.008,C98235,603-RC0402FR-0710KL,Flash WP/HOLD and reset/boot pull-ups
+R12-R14,100R 1% 0402,Yageo,RC0402FR-07100RL,Resistor_SMD:R_0402_1005Metric,3,0.002,0.006,C25076,603-RC0402FR-07100RL,JTAG series damping resistors
+R15-R17,4k7 1% 0402,Yageo,RC0402FR-074K7L,Resistor_SMD:R_0402_1005Metric,3,0.002,0.006,C25900,603-RC0402FR-074K7L,JTAG reset and I2C pull-ups
+R20-R23,330R 1% 0402,Yageo,RC0402FR-07330RL,Resistor_SMD:R_0402_1005Metric,4,0.002,0.008,C25104,603-RC0402FR-07330RL,LED current limiting resistors
+SW1-SW2,Tactile Switch,Omron,B3U-1000P,Button_Switch_SMD:SW_SPST_B3U-1000P,2,0.20,0.40,C128955,653-B3U-1000P,Reset and boot/program tactile buttons
+TP1-TP7,TestPoint 1.5mm pad,Generic,,TestPoint:TestPoint_SMD_Pad_D1.5mm,7,0,0,,,Power and debug test points
+MH1-MH4,M3 Mounting Hole,Generic,,MountingHole:MountingHole_3.2mm_M3,4,0,0,,,Non-plated 3.2mm corner mounting holes
+,,,,,,,,,,
+,,,,TOTAL CARRIER BOM (qty 1 excl. FPGA module),,,$12.49,,
+,,,,FPGA MODULE (OrangeCrab 85F, sold separately),,,~$42,,
+,,,,TOTAL ESTIMATED SYSTEM COST (qty 1),,,~$55,,

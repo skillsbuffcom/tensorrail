@@ -1,0 +1,13 @@
+CERN Open Hardware Licence Version 2 - Strongly Reciprocal
+
+This hardware design is intended to be licensed under CERN-OHL-S v2.0.
+The authoritative licence text is available from CERN:
+
+https://ohwr.org/cern_ohl_s_v2.txt
+
+Copyright (c) 2026 TensorRail Contributors
+
+This repository includes hardware source files, KiCad project files, PCB layout
+files, BOM data, and mechanical CAD associated with the TensorRail-Mini carrier.
+Redistribution and modification must comply with CERN-OHL-S v2.0.
+

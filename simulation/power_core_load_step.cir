@@ -1,0 +1,301 @@
+* =============================================================================
+* power_core_load_step.cir
+* TensorRail-Mini — 1.2 V FPGA Core Rail Load-Step Transient
+* =============================================================================
+*
+* What this simulation proves
+* ---------------------------
+* When the ECP5 systolic array starts a tile computation it switches ~350 mA
+* of additional dynamic current within a few nanoseconds.  This file answers
+* three bring-up questions:
+*
+*   1. Does the 1.2 V rail stay inside the ±5 % window (1.14 V – 1.26 V)
+*      during the transient?
+*   2. How quickly does the loop recover (target: < 50 µs)?
+*   3. Is the peak inductor current within the 3 A rating of L1?
+*
+* Approach: behavioural average model
+* ------------------------------------
+* A switching regulator is modelled as a voltage-controlled voltage source
+* (VCVS) acting as a proportional-integral error amplifier driving an
+* average switch-node voltage.  This is the standard "behavioural average
+* model" taught in Middlebrook & Ćuk (1976) and is accurate for frequencies
+* well below Fsw/10 = 150 kHz for a 1.5 MHz switcher.  No vendor SPICE model
+* is needed.  The model captures:
+*   - DC regulation (Vout → Vfb = Vref via the resistor divider)
+*   - Loop bandwidth and phase margin (set by the compensator pole/zero)
+*   - Inductor current and output voltage ripple
+*
+* It does NOT capture:
+*   - Switching noise / EMI
+*   - Gate-drive losses
+*   - Subharmonic oscillation (needs cycle-by-cycle model)
+*
+* Hardware mapping
+* ----------------
+*   Regulator  : TPS62130ARGTR  3 A synchronous buck, Fsw = 1.5 MHz
+*   Vin        : 5.0 V  (USB-C VBUS via Schottky D1 on carrier)
+*   Vout       : 1.2 V  (FPGA VCCCORE / VCCAUX rail)
+*   Inductor   : L1  2.2 µH  Würth 744043220,  DCR = 65 mΩ,  Isat = 3 A
+*   Bulk cap   : C9  100 µF  Murata GRM32ER61A107ME20L,  ESR ≈ 5 mΩ
+*   HF bypass  : C10 400 nF  (4 × 100 nF 0402 X7R),      ESR ≈ 12.5 mΩ
+*   FB divider : R5 = 103 kΩ (top), R6 = 100 kΩ (bottom)
+*     → Vfb = Vout × R6/(R5+R6) = 1.2 × 100/203 = 0.5911 V ≈ Vref = 0.590 V
+*   Load       : ECP5-85F idle ≈ 50 mA; active (4×4 tile) ≈ 400 mA
+*     → step magnitude: +350 mA in ~5 ns
+*
+* Run with ngspice (batch mode):
+*   ngspice -b power_core_load_step.cir
+*
+* Or interactively:
+*   ngspice power_core_load_step.cir
+*
+* Output: simulation/power_core_load_step.raw  (ngspice binary RAW format)
+*   View with:  ngspice -b power_core_load_step.cir   (then open .raw)
+*             or import into Python with: pip install PySpice
+*             or open directly in KiCad's built-in waveform viewer.
+* =============================================================================
+
+.title TensorRail-Mini VCCCORE 1.2V Load-Step Transient
+
+* ── Transient analysis ────────────────────────────────────────────────────────
+* 5 ns timestep, 300 µs total.  The load step hits at t = 50 µs.
+* Recovery should complete by ~100 µs; remainder shows steady-state ripple.
+.tran 5n 300u 0 5n
+
+* ── Supply rail ──────────────────────────────────────────────────────────────
+* 5 V VBUS from USB-C.  Treated as ideal; source impedance ≈ cable + D1 drop
+* (≈ 0.3 V) is already accounted for in the Vin value.
+Vin  vin  0  DC 5.0
+
+* ── Feedback reference ───────────────────────────────────────────────────────
+* TPS62130 internal bandgap reference: 590 mV (typical from datasheet §8.3).
+Vref  vref  0  DC 0.590
+
+* ── Feedback divider (R5 top = 103 kΩ, R6 bottom = 100 kΩ) ──────────────────
+* Vfb = Vout × R6 / (R5 + R6) = Vout × 100k / 203k = Vout × 0.4926
+* At Vout = 1.2 V: Vfb = 0.5911 V → error ≈ +1 mV from Vref  (< 0.2 % → OK)
+*
+* These are the actual BOM values (E96 series) from hardware/bom.csv.
+* Changing R5 or R6 changes Vout; this is the first thing to verify on a new
+* board (Phase 1, step 2 of docs/bringup_plan.md).
+Rfbt  vout  vsense  103k    ; R5 top divider
+Rfbb  vsense 0      100k    ; R6 bottom divider
+
+* ── Compensator / error amplifier ────────────────────────────────────────────
+* Type-II (PI + lead) compensator modelled as a Laplace-domain VCVS.
+* Transfer function:   Gc(s) = Aol × (1 + s/ωz) / (s/ωp × (1 + s/ωp2))
+*
+*   Aol  = 60 dB open-loop gain  (6 orders of magnitude, typical OTA)
+*   fz   = 30 kHz  zero  (cancels LC double-pole at ~24 kHz for 2.2 µH / 100 µF)
+*   fp1  = 0 Hz    integrating pole (gives zero steady-state error)
+*   fp2  = 1 MHz   high-frequency roll-off (above Fsw/2, for stability margin)
+*
+* The LAPLACE keyword is supported by ngspice and XSpice-compatible simulators.
+* It is an educational approximation; a real TPS62130 loop has additional
+* internal poles but this model reproduces the dominant transient behaviour.
+Eea  verr  0  LAPLACE { V(vref) - V(vsense) }
++    { 1000 * (1 + s/(2*3.14159*30000)) / ( (s/(2*3.14159*1e6) + 1) * s/(2*3.14159*1000) ) }
+
+* ── Duty cycle: D = Verr clamped to [0.02, 0.95] ────────────────────────────
+* In steady state D = Vout/Vin = 1.2/5.0 = 0.24.
+* Clamp prevents the model from demanding impossible duty cycles during transients.
+Eduty  duty  0  VALUE { MAX(0.02, MIN(0.95, V(verr) / 5.0)) }
+
+* ── Average switch-node voltage ───────────────────────────────────────────────
+* Vsw_avg = Vin × D  (first-order average model of the half-bridge)
+* This is the key behavioural approximation: the switching waveform is replaced
+* by its average, which is valid for f << Fsw/10 = 150 kHz.
+Esw  vsw  0  VALUE { V(vin) * V(duty) }
+
+* ── Output inductor: 2.2 µH, DCR = 65 mΩ ────────────────────────────────────
+* L1: Würth Elektronik 744043220.  DCR from datasheet.
+* Saturation current = 3 A; the .measure below checks iL_pk < 3 A.
+L1   vsw   vil   2.2u
+RL1  vil   vout  65m
+
+* ── Output capacitor bank ────────────────────────────────────────────────────
+*
+* C9: 100 µF Murata GRM32ER61A107ME20L  (X5R, 1210 package)
+*   ESR ≈ 5 mΩ  (measured at 100 kHz, Murata SimSurfing)
+*   ESL ≈ 0.8 nH (estimated for 1210 via-mounted cap)
+*
+* Modelled as a series RLC branch to vout:
+*   Cbulk in series with RCbulk (ESR) and LCbulk (ESL)
+*
+C_bulk   vout    vc_esr   100u
+RC_bulk  vc_esr  vc_esl   5m
+LC_bulk  vc_esl  0        800p
+
+* C10: 4 × 100 nF 0402 X7R HF bypass caps placed close to FPGA balls.
+*   Parallel combination: 400 nF total.
+*   Parallel ESR: 50 mΩ / 4 = 12.5 mΩ per combined network.
+*   These dominate the high-frequency (> 1 MHz) impedance of the rail.
+*
+C_hf   vout    vc_hf   400n
+RC_hf  vc_hf   0       12.5m
+
+* ── PCB parasitic path from regulator to FPGA VCCCORE balls ─────────────────
+* Short 1.0 mm wide, 5 mm long power trace in 1 oz copper on 1.6 mm FR4.
+*   R_trace ≈ 0.5 mΩ/sq × 5 sq = 2.5 mΩ  (negligible but included for realism)
+*   L_via   ≈ 150 pH per via pair (standard 0.3 mm via in 1.6 mm FR4)
+*
+Lbrd  vout   vfpga   150p    ; via inductance
+Rbrd  vfpga  vcore   2.5m    ; copper trace resistance
+* vcore is the voltage at the FPGA VCCCORE pad — the node we care about.
+
+* ── Load model: ECP5-85F VCCCORE current ─────────────────────────────────────
+*
+* Idle current (reset, PLL stable, no logic toggling):  Iidle  ≈  50 mA
+*   Source: ECP5 datasheet §DC Characteristics, ICCCORE typical at fclk = 0.
+*
+* Active current (4×4 systolic array tile computation at 48 MHz):  Iactive ≈ 400 mA
+*   Estimate: I = C_eff × V × f × N_FF = 0.25 pF × 1.2 V × 48 MHz × ~28 000 FFs
+*   ≈ 400 mA.  This is an educational estimate; real dynamic current depends on
+*   switching activity, operand values, and PVT corner.
+*
+* Load step:
+*   t = 0 → 50 µs    : Iidle  = 50 mA  (post-reset settling)
+*   t = 50 µs → 200 µs: Iactive = 400 mA (tile computation begins)
+*   t = 200 µs → 300 µs: Iidle  = 50 mA  (tile done, array idle)
+*   Rise/fall time   : 5 ns  (limited by decoupling cap bandwidth, not logic)
+*
+* The 5 ns rise time is conservative (real FPGA switching is < 1 ns) but avoids
+* convergence issues in the average model which is not valid above ~150 kHz.
+
+Idc    vcore  0  DC 0.050               ; quiescent 50 mA always present
+
+Istep  vcore  0  PWL                    ; piecewise-linear load step
++    0n       0
++    50u      0
++    50.005u  0.350                     ; +350 mA in 5 ns  (0 → 50 µs idle, step at 50 µs)
++    200u     0.350
++    200.005u 0                         ; step off at 200 µs
++    300u     0
+
+* ── Measurements ─────────────────────────────────────────────────────────────
+* All measurements reference vcore (the FPGA-side node), not vout,
+* to include PCB parasitic drop.
+
+* Pre-step nominal voltage (average over a quiet 30 µs window)
+.measure tran vcore_nom  AVG   V(vcore)  FROM=10u    TO=40u
+
+* Worst-case undershoot after load step
+.measure tran vcore_min  MIN   V(vcore)  FROM=50u    TO=80u
+
+* Worst-case overshoot after load step removes
+.measure tran vcore_max  MAX   V(vcore)  FROM=200u   TO=230u
+
+* Steady-state regulated voltage under load
+.measure tran vcore_ss   AVG   V(vcore)  FROM=150u   TO=195u
+
+* Peak inductor current during transient
+.measure tran iL_pk      MAX   I(L1)     FROM=50u    TO=80u
+
+* Derived: undershoot and overshoot magnitudes
+.measure tran undershoot PARAM { vcore_nom - vcore_min }
+.measure tran overshoot  PARAM { vcore_max - vcore_nom }
+
+* Settling time: first crossing back above 98 % of nominal after undershoot
+* (1.176 V = 1.2 V × 0.98 = lower edge of ±2 % window)
+.measure tran t_settle   WHEN V(vcore) = 1.176  CROSS = 2
+
+* ── Pass / fail criteria ─────────────────────────────────────────────────────
+* These thresholds map directly to Phase 1 of docs/bringup_plan.md.
+*
+*   undershoot < 60 mV  → vcore stays above 1.14 V  (ECP5 Vmin for VCCCORE)
+*   overshoot  < 60 mV  → vcore stays below 1.26 V
+*   t_settle   < 50 µs  → loop bandwidth adequate for 48 MHz tile cadence
+*   iL_pk      < 3.0 A  → within L1 saturation current rating
+*
+* If any criterion fails in simulation, increase C9 (output bulk cap) or
+* adjust compensator zero frequency (Eea above) before ordering PCBs.
+
+* ── Solver options ────────────────────────────────────────────────────────────
+* GEAR integration is more stable for stiff circuits (large L/C ratio).
+* RELTOL = 1e-4 is tighter than the default (1e-3) to resolve < 1 mV features.
+.options RELTOL=1e-4 ABSTOL=1e-9 VNTOL=1e-6
+.options METHOD=GEAR
+.options MAXSTEP=50n
+
+* ── Probed signals ────────────────────────────────────────────────────────────
+.probe tran V(vcore) V(vout) V(vsw) I(L1) V(duty)
+
+* ── .control block ────────────────────────────────────────────────────────────
+* The .control block is executed by ngspice's built-in interpreter after the
+* netlist is read.  It:
+*   1. Runs the transient analysis defined above.
+*   2. Prints the .measure results to stdout for easy CI/CD parsing.
+*   3. Writes the full waveform database to power_core_load_step.raw so that
+*      the results can be inspected in a waveform viewer without re-running.
+*
+* To use interactively: ngspice power_core_load_step.cir
+* To use in batch CI:   ngspice -b power_core_load_step.cir
+*
+.control
+
+    * Run the transient simulation defined in the netlist section above.
+    run
+
+    * ── Print measured values ───────────────────────────────────────────────
+    echo ""
+    echo "=== TensorRail-Mini VCCCORE Load-Step Results ==="
+    echo ""
+    print vcore_nom
+    print vcore_min
+    print vcore_ss
+    print undershoot
+    print overshoot
+    print t_settle
+    print iL_pk
+    echo ""
+
+    * ── Pass/fail checks ────────────────────────────────────────────────────
+    * ngspice's 'if' supports basic comparisons on measured values.
+    * Threshold values match docs/bringup_plan.md Phase 1 criteria.
+    if undershoot > 0.060
+        echo "FAIL: undershoot exceeds 60 mV — rail dips below 1.14 V"
+    else
+        echo "PASS: undershoot < 60 mV"
+    end
+
+    if overshoot > 0.060
+        echo "FAIL: overshoot exceeds 60 mV — rail exceeds 1.26 V"
+    else
+        echo "PASS: overshoot < 60 mV"
+    end
+
+    if t_settle > 50e-6
+        echo "FAIL: settling time exceeds 50 µs"
+    else
+        echo "PASS: settling time < 50 µs"
+    end
+
+    if iL_pk > 3.0
+        echo "FAIL: peak inductor current exceeds 3.0 A rating of L1"
+    else
+        echo "PASS: peak inductor current < 3.0 A"
+    end
+
+    echo ""
+
+    * ── Save waveforms ──────────────────────────────────────────────────────
+    * writefile writes the currently active plot (the tran1 result of 'run')
+    * to an ngspice binary RAW file.  The path is relative to the working
+    * directory from which ngspice is invoked.  Run from repo root:
+    *   ngspice -b simulation/power_core_load_step.cir
+    * produces simulation/power_core_load_step.raw.
+    *
+    * The RAW file can be opened with:
+    *   - ngnutmeg  (ngspice companion viewer)
+    *   - KiCad 7+ built-in SPICE viewer (File → Open → *.raw)
+    *   - Python:  pip install PySpice; from PySpice.Spice.RawFile import RawFile
+
+    write simulation/power_core_load_step.raw V(vcore) V(vout) I(L1) V(duty)
+
+    echo "Wrote: simulation/power_core_load_step.raw"
+    echo ""
+
+.endc
+
+.end
