@@ -2593,7 +2593,7 @@
 	(footprint "Capacitor_SMD:C_0805_2012Metric"
 		(layer "F.Cu")
 		(uuid "a3a87a67-5db4-40f5-9e80-f20e3a9d700f")
-		(at 92 32 90)
+		(at 92 31.2 90)
 		(property "Reference" "C9"
 			(at 0 -1.6 0)
 			(layer "F.SilkS")
@@ -5714,7 +5714,7 @@
 		(uuid "d1847a4a-fd58-43ce-912e-e0a7dfb43eb1")
 	)
 	(segment
-		(start 92 31.05)
+		(start 92 30.25)
 		(end 92.8017 31.05)
 		(width 0.2)
 		(layer "F.Cu")
@@ -6498,6 +6498,14 @@
 		(uuid "17f555b9-9dab-487e-84d6-54f226539e30")
 	)
 	(segment
+		(start 6.94 25)
+		(end 6.94 37)
+		(width 0.2)
+		(layer "F.Cu")
+		(net "GPIO0")
+		(uuid "1e2a9fcb-d107-46f6-aa25-e83555a4d591")
+	)
+	(segment
 		(start 94.6372 35.8439)
 		(end 93.73 34.9367)
 		(width 0.2)
@@ -6514,14 +6522,6 @@
 		(uuid "49d9734a-78d9-4973-8cef-091ff2483a1c")
 	)
 	(segment
-		(start 10 36)
-		(end 6.94 37)
-		(width 0.2)
-		(layer "F.Cu")
-		(net "GPIO0")
-		(uuid "53557582-cf20-4c92-9346-318ad3aa25f0")
-	)
-	(segment
 		(start 90.73 56.43)
 		(end 57.38 56.43)
 		(width 0.2)
@@ -6530,20 +6530,20 @@
 		(uuid "56962734-d640-4b79-8a73-4c15915b9304")
 	)
 	(segment
-		(start 15.3 35.635)
-		(end 10 36)
-		(width 0.2)
-		(layer "F.Cu")
-		(net "GPIO0")
-		(uuid "650b8daf-136f-4468-bf2b-897f0c6331f9")
-	)
-	(segment
 		(start 57.38 56.43)
 		(end 55 54.05)
 		(width 0.2)
 		(layer "F.Cu")
 		(net "GPIO0")
 		(uuid "8857cccf-4776-4d54-9ee6-ac7a308dcc55")
+	)
+	(via
+		(at 6.94 25)
+		(size 0.6)
+		(drill 0.3)
+		(layers "F.Cu" "B.Cu")
+		(net "GPIO0")
+		(uuid "36d6c11f-2204-447d-8a6e-8e8852b0e217")
 	)
 	(via
 		(at 55 54.05)
@@ -6618,12 +6618,36 @@
 		(uuid "9a621fc6-eaf2-4d98-be7b-608ccbe6e89e")
 	)
 	(segment
+		(start 15.3 18)
+		(end 6.94 18)
+		(width 0.2)
+		(layer "B.Cu")
+		(net "GPIO0")
+		(uuid "bbec88ca-8c84-4b16-9188-316c297501b7")
+	)
+	(segment
+		(start 6.94 18)
+		(end 6.94 25)
+		(width 0.2)
+		(layer "B.Cu")
+		(net "GPIO0")
+		(uuid "c1d2fedc-31ff-408f-9011-ccd4e73cdac8")
+	)
+	(segment
 		(start 95.6602 57.9123)
 		(end 95.6602 36.8669)
 		(width 0.2)
 		(layer "B.Cu")
 		(net "GPIO0")
 		(uuid "dc25b69a-040e-4ae3-a745-554126505a52")
+	)
+	(segment
+		(start 15.3 35.635)
+		(end 15.3 18)
+		(width 0.2)
+		(layer "B.Cu")
+		(net "GPIO0")
+		(uuid "f6ad1af9-d05c-4adb-bc9f-66b8f068e0fb")
 	)
 	(segment
 		(start 89.2055 49.2675)
@@ -7538,7 +7562,7 @@
 		(uuid "d3060528-91be-40b6-bb47-cdf5c5a9b23c")
 	)
 	(segment
-		(start 92 32.95)
+		(start 92 32.15)
 		(end 91.1983 32.95)
 		(width 0.2)
 		(layer "F.Cu")
@@ -7571,7 +7595,7 @@
 	)
 	(segment
 		(start 91.8817 33.0683)
-		(end 92 32.95)
+		(end 92 32.15)
 		(width 0.2)
 		(layer "F.Cu")
 		(net "+3V3")

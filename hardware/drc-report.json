@@ -1,7 +1,7 @@
 {
     "$schema": "https://schemas.kicad.org/drc.v1.json",
     "coordinate_units": "mm",
-    "date": "2026-06-11T13:42:43",
+    "date": "2026-06-11T18:06:38",
     "ignored_checks": [
         {
             "description": "Footprint has no courtyard defined",
@@ -37,104 +37,12 @@
             "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1950 mm)",
             "items": [
                 {
-                    "description": "Track [VBUS_RAW] on F.Cu, length 1.5000 mm",
+                    "description": "Pad A4 [VBUS_RAW] of J1 on F.Cu",
                     "pos": {
-                        "x": 2.32,
-                        "y": 33.0
+                        "x": 7.78,
+                        "y": 37.0
                     },
-                    "uuid": "14bdc74c-c0fc-4f00-8949-69278904daa3"
-                },
-                {
-                    "description": "Pad B8 [GND] of J1 on F.Cu",
-                    "pos": {
-                        "x": 2.74,
-                        "y": 33.0
-                    },
-                    "uuid": "abadbe9a-ca05-44fb-8766-8d65c7910cec"
-                }
-            ],
-            "severity": "error",
-            "type": "clearance"
-        },
-        {
-            "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1950 mm)",
-            "items": [
-                {
-                    "description": "Track [GND] on F.Cu, length 0.4200 mm",
-                    "pos": {
-                        "x": 3.58,
-                        "y": 33.0
-                    },
-                    "uuid": "30810a2e-7a39-4830-b6b6-66432178097c"
-                },
-                {
-                    "description": "Pad B4 [VBUS_RAW] of J1 on F.Cu",
-                    "pos": {
-                        "x": 4.42,
-                        "y": 33.0
-                    },
-                    "uuid": "ff895bed-73e7-4c63-98f0-1efcb7669bb5"
-                }
-            ],
-            "severity": "error",
-            "type": "clearance"
-        },
-        {
-            "description": "Items shorting two nets (nets GPIO0 and GND)",
-            "items": [
-                {
-                    "description": "Track [GPIO0] on F.Cu, length 3.2193 mm",
-                    "pos": {
-                        "x": 10.0,
-                        "y": 36.0
-                    },
-                    "uuid": "53557582-cf20-4c92-9346-318ad3aa25f0"
-                },
-                {
-                    "description": "Track [GND] on F.Cu, length 2.0000 mm",
-                    "pos": {
-                        "x": 7.36,
-                        "y": 39.0
-                    },
-                    "uuid": "f83af8f0-718a-4e8b-8de8-9c6886ac6820"
-                }
-            ],
-            "severity": "error",
-            "type": "shorting_items"
-        },
-        {
-            "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1700 mm)",
-            "items": [
-                {
-                    "description": "Track [GND] on F.Cu, length 0.4200 mm",
-                    "pos": {
-                        "x": 3.58,
-                        "y": 33.0
-                    },
-                    "uuid": "30810a2e-7a39-4830-b6b6-66432178097c"
-                },
-                {
-                    "description": "Track [VBUS_RAW] on F.Cu, length 9.0000 mm",
-                    "pos": {
-                        "x": 4.42,
-                        "y": 33.0
-                    },
-                    "uuid": "37d08ffa-f1bd-447a-b439-6b7bb46befa3"
-                }
-            ],
-            "severity": "error",
-            "type": "clearance"
-        },
-        {
-            "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1914 mm)",
-            "items": [
-                {
-                    "description": "Track [GPIO0] on F.Cu, length 3.2193 mm",
-                    "pos": {
-                        "x": 10.0,
-                        "y": 36.0
-                    },
-                    "uuid": "53557582-cf20-4c92-9346-318ad3aa25f0"
+                    "uuid": "691faa4b-12b4-4dc2-b643-8d1854a7af8e"
                 },
                 {
                     "description": "Track [GND] on F.Cu, length 2.0000 mm",
@@ -152,12 +60,58 @@
             "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1950 mm)",
             "items": [
                 {
+                    "description": "Pad A4 [VBUS_RAW] of J1 on F.Cu",
+                    "pos": {
+                        "x": 7.78,
+                        "y": 37.0
+                    },
+                    "uuid": "691faa4b-12b4-4dc2-b643-8d1854a7af8e"
+                },
+                {
+                    "description": "Track [GND] on F.Cu, length 2.0000 mm",
+                    "pos": {
+                        "x": 7.36,
+                        "y": 39.0
+                    },
+                    "uuid": "f83af8f0-718a-4e8b-8de8-9c6886ac6820"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1950 mm)",
+            "items": [
+                {
                     "description": "Track [GND] on F.Cu, length 2.0000 mm",
                     "pos": {
                         "x": 4.0,
                         "y": 33.0
                     },
                     "uuid": "f8c6b4ed-621d-4548-ae9c-e0a742e2dd7d"
+                },
+                {
+                    "description": "Pad B4 [VBUS_RAW] of J1 on F.Cu",
+                    "pos": {
+                        "x": 4.42,
+                        "y": 33.0
+                    },
+                    "uuid": "ff895bed-73e7-4c63-98f0-1efcb7669bb5"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1950 mm)",
+            "items": [
+                {
+                    "description": "Track [GND] on F.Cu, length 0.4200 mm",
+                    "pos": {
+                        "x": 3.58,
+                        "y": 33.0
+                    },
+                    "uuid": "30810a2e-7a39-4830-b6b6-66432178097c"
                 },
                 {
                     "description": "Pad B4 [VBUS_RAW] of J1 on F.Cu",
@@ -195,29 +149,6 @@
             "type": "clearance"
         },
         {
-            "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1950 mm)",
-            "items": [
-                {
-                    "description": "Track [GND] on F.Cu, length 2.0000 mm",
-                    "pos": {
-                        "x": 5.26,
-                        "y": 37.0
-                    },
-                    "uuid": "3e0782c8-b851-4873-b534-bb37e7b4f06b"
-                },
-                {
-                    "description": "Pad A9 [VBUS_RAW] of J1 on F.Cu",
-                    "pos": {
-                        "x": 5.68,
-                        "y": 37.0
-                    },
-                    "uuid": "d390354a-d07f-46e8-b24b-abb1a616fa50"
-                }
-            ],
-            "severity": "error",
-            "type": "clearance"
-        },
-        {
             "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0200 mm)",
             "items": [
                 {
@@ -235,6 +166,29 @@
                         "y": 40.5
                     },
                     "uuid": "9a6acbbb-f38b-42d1-8b56-afd121a45fea"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1950 mm)",
+            "items": [
+                {
+                    "description": "Track [VBUS_RAW] on F.Cu, length 1.5000 mm",
+                    "pos": {
+                        "x": 2.32,
+                        "y": 33.0
+                    },
+                    "uuid": "14bdc74c-c0fc-4f00-8949-69278904daa3"
+                },
+                {
+                    "description": "Pad B8 [GND] of J1 on F.Cu",
+                    "pos": {
+                        "x": 2.74,
+                        "y": 33.0
+                    },
+                    "uuid": "abadbe9a-ca05-44fb-8766-8d65c7910cec"
                 }
             ],
             "severity": "error",
@@ -270,9 +224,9 @@
                     "description": "Track [GND] on F.Cu, length 2.0000 mm",
                     "pos": {
                         "x": 5.26,
-                        "y": 35.0
+                        "y": 37.0
                     },
-                    "uuid": "411ed5b3-f997-4cea-8d88-3f1bac84ef99"
+                    "uuid": "3e0782c8-b851-4873-b534-bb37e7b4f06b"
                 },
                 {
                     "description": "Pad A9 [VBUS_RAW] of J1 on F.Cu",
@@ -310,6 +264,52 @@
             "type": "clearance"
         },
         {
+            "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1450 mm)",
+            "items": [
+                {
+                    "description": "Track [VBUS_RAW] on F.Cu, length 9.0000 mm",
+                    "pos": {
+                        "x": 4.42,
+                        "y": 33.0
+                    },
+                    "uuid": "37d08ffa-f1bd-447a-b439-6b7bb46befa3"
+                },
+                {
+                    "description": "Pad B1 [GND] of J1 on F.Cu",
+                    "pos": {
+                        "x": 4.84,
+                        "y": 33.0
+                    },
+                    "uuid": "4d506a0f-3dea-468b-9ffd-5d0ae46f9996"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1950 mm)",
+            "items": [
+                {
+                    "description": "Track [GND] on F.Cu, length 2.0000 mm",
+                    "pos": {
+                        "x": 5.26,
+                        "y": 35.0
+                    },
+                    "uuid": "411ed5b3-f997-4cea-8d88-3f1bac84ef99"
+                },
+                {
+                    "description": "Pad A9 [VBUS_RAW] of J1 on F.Cu",
+                    "pos": {
+                        "x": 5.68,
+                        "y": 37.0
+                    },
+                    "uuid": "d390354a-d07f-46e8-b24b-abb1a616fa50"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
             "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1380 mm)",
             "items": [
                 {
@@ -327,6 +327,29 @@
                         "y": 50.0
                     },
                     "uuid": "976aea6b-413f-46c7-983f-b04d41764c06"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0200 mm)",
+            "items": [
+                {
+                    "description": "Track [VBUS_RAW] on F.Cu, length 3.5000 mm",
+                    "pos": {
+                        "x": 7.78,
+                        "y": 40.5
+                    },
+                    "uuid": "ca2fffd9-55ae-4021-ad2d-8c8588000806"
+                },
+                {
+                    "description": "Via [GND] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 7.36,
+                        "y": 39.0
+                    },
+                    "uuid": "f2213eec-f7e8-4a09-bf17-095bcee535e9"
                 }
             ],
             "severity": "error",
@@ -379,38 +402,15 @@
             "type": "clearance"
         },
         {
-            "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0200 mm)",
+            "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1950 mm)",
             "items": [
                 {
-                    "description": "Track [VBUS_RAW] on F.Cu, length 3.5000 mm",
+                    "description": "Pad A1 [GND] of J1 on F.Cu",
                     "pos": {
-                        "x": 7.78,
-                        "y": 40.5
+                        "x": 8.2,
+                        "y": 37.0
                     },
-                    "uuid": "ca2fffd9-55ae-4021-ad2d-8c8588000806"
-                },
-                {
-                    "description": "Via [GND] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 7.36,
-                        "y": 39.0
-                    },
-                    "uuid": "f2213eec-f7e8-4a09-bf17-095bcee535e9"
-                }
-            ],
-            "severity": "error",
-            "type": "clearance"
-        },
-        {
-            "description": "Clearance violation ( clearance 0.2000 mm; actual 0.0609 mm)",
-            "items": [
-                {
-                    "description": "Track [GPIO0] on F.Cu, length 3.2193 mm",
-                    "pos": {
-                        "x": 10.0,
-                        "y": 36.0
-                    },
-                    "uuid": "53557582-cf20-4c92-9346-318ad3aa25f0"
+                    "uuid": "7f655b55-baf1-4e0b-be35-858575163b26"
                 },
                 {
                     "description": "Track [VBUS_RAW] on F.Cu, length 3.5000 mm",
@@ -484,60 +484,14 @@
                 {
                     "description": "Track [GND] on F.Cu, length 2.0000 mm",
                     "pos": {
-                        "x": 2.74,
-                        "y": 35.0
+                        "x": 1.9,
+                        "y": 33.0
                     },
-                    "uuid": "7af7378a-72fb-461a-a3eb-9ae457bdbd31"
+                    "uuid": "c99d80ac-8b14-4c2a-9bdc-e8a0f21b1455"
                 }
             ],
             "severity": "error",
             "type": "clearance"
-        },
-        {
-            "description": "Items shorting two nets (nets GPIO0 and GND)",
-            "items": [
-                {
-                    "description": "Track [GPIO0] on F.Cu, length 3.2193 mm",
-                    "pos": {
-                        "x": 10.0,
-                        "y": 36.0
-                    },
-                    "uuid": "53557582-cf20-4c92-9346-318ad3aa25f0"
-                },
-                {
-                    "description": "PTH pad SH [GND] of J1",
-                    "pos": {
-                        "x": 9.8,
-                        "y": 36.0
-                    },
-                    "uuid": "cd6b5915-a99d-4291-a6dd-b623f08b0fcf"
-                }
-            ],
-            "severity": "error",
-            "type": "shorting_items"
-        },
-        {
-            "description": "Items shorting two nets (nets GPIO0 and GND)",
-            "items": [
-                {
-                    "description": "Track [GPIO0] on F.Cu, length 5.3126 mm",
-                    "pos": {
-                        "x": 15.3,
-                        "y": 35.635
-                    },
-                    "uuid": "650b8daf-136f-4468-bf2b-897f0c6331f9"
-                },
-                {
-                    "description": "PTH pad SH [GND] of J1",
-                    "pos": {
-                        "x": 9.8,
-                        "y": 36.0
-                    },
-                    "uuid": "cd6b5915-a99d-4291-a6dd-b623f08b0fcf"
-                }
-            ],
-            "severity": "error",
-            "type": "shorting_items"
         },
         {
             "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1950 mm)",
@@ -553,10 +507,10 @@
                 {
                     "description": "Track [GND] on F.Cu, length 2.0000 mm",
                     "pos": {
-                        "x": 1.9,
-                        "y": 33.0
+                        "x": 2.74,
+                        "y": 35.0
                     },
-                    "uuid": "c99d80ac-8b14-4c2a-9bdc-e8a0f21b1455"
+                    "uuid": "7af7378a-72fb-461a-a3eb-9ae457bdbd31"
                 }
             ],
             "severity": "error",
@@ -566,20 +520,20 @@
             "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1950 mm)",
             "items": [
                 {
-                    "description": "Pad A8 [GND] of J1 on F.Cu",
+                    "description": "Track [GPIO0] on F.Cu, length 12.0000 mm",
                     "pos": {
-                        "x": 6.1,
-                        "y": 37.0
+                        "x": 6.94,
+                        "y": 25.0
                     },
-                    "uuid": "0dac9c47-ce39-4520-9099-5b5996746215"
+                    "uuid": "1e2a9fcb-d107-46f6-aa25-e83555a4d591"
                 },
                 {
-                    "description": "Track [GPIO1] on F.Cu, length 4.5000 mm",
+                    "description": "Pad A5 [GND] of J1 on F.Cu",
                     "pos": {
-                        "x": 6.52,
+                        "x": 7.36,
                         "y": 37.0
                     },
-                    "uuid": "805103b6-085b-42df-a41b-0ae483a7d96c"
+                    "uuid": "bd9371c5-c14a-40ab-a257-e8695a6e6f65"
                 }
             ],
             "severity": "error",
@@ -603,6 +557,29 @@
                         "y": 33.0
                     },
                     "uuid": "ff895bed-73e7-4c63-98f0-1efcb7669bb5"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1950 mm)",
+            "items": [
+                {
+                    "description": "Pad A8 [GND] of J1 on F.Cu",
+                    "pos": {
+                        "x": 6.1,
+                        "y": 37.0
+                    },
+                    "uuid": "0dac9c47-ce39-4520-9099-5b5996746215"
+                },
+                {
+                    "description": "Track [GPIO1] on F.Cu, length 4.5000 mm",
+                    "pos": {
+                        "x": 6.52,
+                        "y": 37.0
+                    },
+                    "uuid": "805103b6-085b-42df-a41b-0ae483a7d96c"
                 }
             ],
             "severity": "error",
@@ -862,29 +839,6 @@
             "type": "clearance"
         },
         {
-            "description": "Items shorting two nets (nets GND and +3V3)",
-            "items": [
-                {
-                    "description": "PTH pad 2 [GND] of J5",
-                    "pos": {
-                        "x": 93.27,
-                        "y": 33.57
-                    },
-                    "uuid": "d8b85364-a3a0-4b5f-b878-30fd214f7599"
-                },
-                {
-                    "description": "Pad 1 [+3V3] of C9 on F.Cu",
-                    "pos": {
-                        "x": 92.0,
-                        "y": 32.95
-                    },
-                    "uuid": "eff6f14b-d2d6-4e13-84d9-c7d27c08905d"
-                }
-            ],
-            "severity": "error",
-            "type": "shorting_items"
-        },
-        {
             "description": "Clearance violation ( clearance 0.2000 mm; actual 0.1700 mm)",
             "items": [
                 {
@@ -1067,144 +1021,6 @@
             ],
             "severity": "error",
             "type": "copper_edge_clearance"
-        },
-        {
-            "description": "Front solder mask aperture bridges items with different nets",
-            "items": [
-                {
-                    "description": "Track [GPIO0] on F.Cu, length 3.2193 mm",
-                    "pos": {
-                        "x": 10.0,
-                        "y": 36.0
-                    },
-                    "uuid": "53557582-cf20-4c92-9346-318ad3aa25f0"
-                },
-                {
-                    "description": "PTH pad SH [GND] of J1",
-                    "pos": {
-                        "x": 9.8,
-                        "y": 36.0
-                    },
-                    "uuid": "cd6b5915-a99d-4291-a6dd-b623f08b0fcf"
-                }
-            ],
-            "severity": "error",
-            "type": "solder_mask_bridge"
-        },
-        {
-            "description": "Front solder mask aperture bridges items with different nets",
-            "items": [
-                {
-                    "description": "Pad 1 [+3V3] of C9 on F.Cu",
-                    "pos": {
-                        "x": 92.0,
-                        "y": 32.95
-                    },
-                    "uuid": "eff6f14b-d2d6-4e13-84d9-c7d27c08905d"
-                },
-                {
-                    "description": "PTH pad 2 [GND] of J5",
-                    "pos": {
-                        "x": 93.27,
-                        "y": 33.57
-                    },
-                    "uuid": "d8b85364-a3a0-4b5f-b878-30fd214f7599"
-                }
-            ],
-            "severity": "error",
-            "type": "solder_mask_bridge"
-        },
-        {
-            "description": "Front solder mask aperture bridges items with different nets",
-            "items": [
-                {
-                    "description": "Track [GPIO0] on F.Cu, length 3.2193 mm",
-                    "pos": {
-                        "x": 10.0,
-                        "y": 36.0
-                    },
-                    "uuid": "53557582-cf20-4c92-9346-318ad3aa25f0"
-                },
-                {
-                    "description": "Pad A1 [GND] of J1 on F.Cu",
-                    "pos": {
-                        "x": 8.2,
-                        "y": 37.0
-                    },
-                    "uuid": "7f655b55-baf1-4e0b-be35-858575163b26"
-                }
-            ],
-            "severity": "error",
-            "type": "solder_mask_bridge"
-        },
-        {
-            "description": "Front solder mask aperture bridges items with different nets",
-            "items": [
-                {
-                    "description": "Track [GPIO0] on F.Cu, length 3.2193 mm",
-                    "pos": {
-                        "x": 10.0,
-                        "y": 36.0
-                    },
-                    "uuid": "53557582-cf20-4c92-9346-318ad3aa25f0"
-                },
-                {
-                    "description": "Pad A4 [VBUS_RAW] of J1 on F.Cu",
-                    "pos": {
-                        "x": 7.78,
-                        "y": 37.0
-                    },
-                    "uuid": "691faa4b-12b4-4dc2-b643-8d1854a7af8e"
-                }
-            ],
-            "severity": "error",
-            "type": "solder_mask_bridge"
-        },
-        {
-            "description": "Front solder mask aperture bridges items with different nets",
-            "items": [
-                {
-                    "description": "Track [GPIO0] on F.Cu, length 3.2193 mm",
-                    "pos": {
-                        "x": 10.0,
-                        "y": 36.0
-                    },
-                    "uuid": "53557582-cf20-4c92-9346-318ad3aa25f0"
-                },
-                {
-                    "description": "Pad A5 [GND] of J1 on F.Cu",
-                    "pos": {
-                        "x": 7.36,
-                        "y": 37.0
-                    },
-                    "uuid": "bd9371c5-c14a-40ab-a257-e8695a6e6f65"
-                }
-            ],
-            "severity": "error",
-            "type": "solder_mask_bridge"
-        },
-        {
-            "description": "Front solder mask aperture bridges items with different nets",
-            "items": [
-                {
-                    "description": "Track [GPIO0] on F.Cu, length 5.3126 mm",
-                    "pos": {
-                        "x": 15.3,
-                        "y": 35.635
-                    },
-                    "uuid": "650b8daf-136f-4468-bf2b-897f0c6331f9"
-                },
-                {
-                    "description": "PTH pad SH [GND] of J1",
-                    "pos": {
-                        "x": 9.8,
-                        "y": 36.0
-                    },
-                    "uuid": "cd6b5915-a99d-4291-a6dd-b623f08b0fcf"
-                }
-            ],
-            "severity": "error",
-            "type": "solder_mask_bridge"
         },
         {
             "description": "Silkscreen clipped by board edge",
@@ -1642,7 +1458,7 @@
                     "description": "Footprint C9",
                     "pos": {
                         "x": 92.0,
-                        "y": 32.0
+                        "y": 31.2
                     },
                     "uuid": "a3a87a67-5db4-40f5-9e80-f20e3a9d700f"
                 }
@@ -2298,29 +2114,6 @@
             "description": "Silkscreen clearance",
             "items": [
                 {
-                    "description": "Reference field of C9",
-                    "pos": {
-                        "x": 90.4,
-                        "y": 32.0
-                    },
-                    "uuid": "67d3e0e6-2602-4591-b0cf-4313f13ef332"
-                },
-                {
-                    "description": "Rectangle of J5 on F.Silkscreen",
-                    "pos": {
-                        "x": 89.46,
-                        "y": 32.3
-                    },
-                    "uuid": "fba3c5c0-3a2e-4b5a-8121-a3b70e15b60f"
-                }
-            ],
-            "severity": "warning",
-            "type": "silk_overlap"
-        },
-        {
-            "description": "Silkscreen clearance",
-            "items": [
-                {
                     "description": "Rectangle of L1 on F.Silkscreen",
                     "pos": {
                         "x": 32.0,
@@ -2344,20 +2137,20 @@
             "description": "Silkscreen clearance",
             "items": [
                 {
-                    "description": "Rectangle of C9 on F.Silkscreen",
+                    "description": "Rectangle of C10 on F.Silkscreen",
                     "pos": {
                         "x": 91.4,
-                        "y": 33.0
+                        "y": 17.0
                     },
-                    "uuid": "5399392d-586e-4cac-9a7f-38df892727b5"
+                    "uuid": "0b5f7842-44c4-4939-b7b9-dfc9879fa90f"
                 },
                 {
-                    "description": "Reference field of J5",
+                    "description": "Reference field of C10",
                     "pos": {
-                        "x": 92.0,
-                        "y": 31.5
+                        "x": 90.4,
+                        "y": 16.0
                     },
-                    "uuid": "5c8c0edc-efe7-4e8a-99d3-cf8a1747e64b"
+                    "uuid": "a670d757-2c74-46ac-9cad-9981f96ce315"
                 }
             ],
             "severity": "warning",
@@ -2370,7 +2163,7 @@
                     "description": "Rectangle of C9 on F.Silkscreen",
                     "pos": {
                         "x": 91.4,
-                        "y": 33.0
+                        "y": 32.2
                     },
                     "uuid": "5399392d-586e-4cac-9a7f-38df892727b5"
                 },
@@ -2390,20 +2183,20 @@
             "description": "Silkscreen clearance",
             "items": [
                 {
-                    "description": "Rectangle of C10 on F.Silkscreen",
+                    "description": "Rectangle of C9 on F.Silkscreen",
                     "pos": {
                         "x": 91.4,
-                        "y": 17.0
+                        "y": 32.2
                     },
-                    "uuid": "0b5f7842-44c4-4939-b7b9-dfc9879fa90f"
+                    "uuid": "5399392d-586e-4cac-9a7f-38df892727b5"
                 },
                 {
-                    "description": "Reference field of C10",
+                    "description": "Reference field of J5",
                     "pos": {
-                        "x": 90.4,
-                        "y": 16.0
+                        "x": 92.0,
+                        "y": 31.5
                     },
-                    "uuid": "a670d757-2c74-46ac-9cad-9981f96ce315"
+                    "uuid": "5c8c0edc-efe7-4e8a-99d3-cf8a1747e64b"
                 }
             ],
             "severity": "warning",
@@ -5564,121 +5357,6 @@
             "description": "Silkscreen clipped by solder mask",
             "items": [
                 {
-                    "description": "Rectangle of C9 on F.Silkscreen",
-                    "pos": {
-                        "x": 91.4,
-                        "y": 33.0
-                    },
-                    "uuid": "5399392d-586e-4cac-9a7f-38df892727b5"
-                },
-                {
-                    "description": "Pad 1 [+3V3] of C9 on F.Cu",
-                    "pos": {
-                        "x": 92.0,
-                        "y": 32.95
-                    },
-                    "uuid": "eff6f14b-d2d6-4e13-84d9-c7d27c08905d"
-                }
-            ],
-            "severity": "warning",
-            "type": "silk_over_copper"
-        },
-        {
-            "description": "Silkscreen clipped by solder mask",
-            "items": [
-                {
-                    "description": "Rectangle of C9 on F.Silkscreen",
-                    "pos": {
-                        "x": 91.4,
-                        "y": 33.0
-                    },
-                    "uuid": "5399392d-586e-4cac-9a7f-38df892727b5"
-                },
-                {
-                    "description": "PTH pad 2 [GND] of J5",
-                    "pos": {
-                        "x": 93.27,
-                        "y": 33.57
-                    },
-                    "uuid": "d8b85364-a3a0-4b5f-b878-30fd214f7599"
-                }
-            ],
-            "severity": "warning",
-            "type": "silk_over_copper"
-        },
-        {
-            "description": "Silkscreen clipped by solder mask",
-            "items": [
-                {
-                    "description": "Rectangle of C9 on F.Silkscreen",
-                    "pos": {
-                        "x": 91.4,
-                        "y": 33.0
-                    },
-                    "uuid": "5399392d-586e-4cac-9a7f-38df892727b5"
-                },
-                {
-                    "description": "PTH pad 1 [+3V3] of J5",
-                    "pos": {
-                        "x": 90.73,
-                        "y": 33.57
-                    },
-                    "uuid": "88853db1-eb20-466f-b071-6d4b7157ff37"
-                }
-            ],
-            "severity": "warning",
-            "type": "silk_over_copper"
-        },
-        {
-            "description": "Silkscreen clipped by solder mask",
-            "items": [
-                {
-                    "description": "Reference field of J5",
-                    "pos": {
-                        "x": 92.0,
-                        "y": 31.5
-                    },
-                    "uuid": "5c8c0edc-efe7-4e8a-99d3-cf8a1747e64b"
-                },
-                {
-                    "description": "Pad 2 [GND] of C9 on F.Cu",
-                    "pos": {
-                        "x": 92.0,
-                        "y": 31.05
-                    },
-                    "uuid": "3100a9cd-60b3-4354-b5c2-cfc93756b5ba"
-                }
-            ],
-            "severity": "warning",
-            "type": "silk_over_copper"
-        },
-        {
-            "description": "Silkscreen clipped by solder mask",
-            "items": [
-                {
-                    "description": "Rectangle of C9 on F.Silkscreen",
-                    "pos": {
-                        "x": 91.4,
-                        "y": 33.0
-                    },
-                    "uuid": "5399392d-586e-4cac-9a7f-38df892727b5"
-                },
-                {
-                    "description": "Pad 2 [GND] of C9 on F.Cu",
-                    "pos": {
-                        "x": 92.0,
-                        "y": 31.05
-                    },
-                    "uuid": "3100a9cd-60b3-4354-b5c2-cfc93756b5ba"
-                }
-            ],
-            "severity": "warning",
-            "type": "silk_over_copper"
-        },
-        {
-            "description": "Silkscreen clipped by solder mask",
-            "items": [
-                {
                     "description": "Rectangle of C10 on F.Silkscreen",
                     "pos": {
                         "x": 91.4,
@@ -5687,12 +5365,12 @@
                     "uuid": "0b5f7842-44c4-4939-b7b9-dfc9879fa90f"
                 },
                 {
-                    "description": "Pad 1 [+3V3] of C10 on F.Cu",
+                    "description": "Pad 2 [GND] of C10 on F.Cu",
                     "pos": {
                         "x": 92.0,
-                        "y": 16.95
+                        "y": 15.05
                     },
-                    "uuid": "c28d132e-2894-4438-8d51-4cc2f1fe9cca"
+                    "uuid": "3f28da55-f3b6-487b-9036-dcc76d66079a"
                 }
             ],
             "severity": "warning",
@@ -5759,7 +5437,7 @@
                     "description": "Pad 1 [+3V3] of C9 on F.Cu",
                     "pos": {
                         "x": 92.0,
-                        "y": 32.95
+                        "y": 32.15
                     },
                     "uuid": "eff6f14b-d2d6-4e13-84d9-c7d27c08905d"
                 }
@@ -5817,6 +5495,75 @@
             "description": "Silkscreen clipped by solder mask",
             "items": [
                 {
+                    "description": "Reference field of J5",
+                    "pos": {
+                        "x": 92.0,
+                        "y": 31.5
+                    },
+                    "uuid": "5c8c0edc-efe7-4e8a-99d3-cf8a1747e64b"
+                },
+                {
+                    "description": "Pad 1 [+3V3] of C9 on F.Cu",
+                    "pos": {
+                        "x": 92.0,
+                        "y": 32.15
+                    },
+                    "uuid": "eff6f14b-d2d6-4e13-84d9-c7d27c08905d"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Rectangle of C9 on F.Silkscreen",
+                    "pos": {
+                        "x": 91.4,
+                        "y": 32.2
+                    },
+                    "uuid": "5399392d-586e-4cac-9a7f-38df892727b5"
+                },
+                {
+                    "description": "Pad 1 [+3V3] of C9 on F.Cu",
+                    "pos": {
+                        "x": 92.0,
+                        "y": 32.15
+                    },
+                    "uuid": "eff6f14b-d2d6-4e13-84d9-c7d27c08905d"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Rectangle of C9 on F.Silkscreen",
+                    "pos": {
+                        "x": 91.4,
+                        "y": 32.2
+                    },
+                    "uuid": "5399392d-586e-4cac-9a7f-38df892727b5"
+                },
+                {
+                    "description": "Pad 2 [GND] of C9 on F.Cu",
+                    "pos": {
+                        "x": 92.0,
+                        "y": 30.25
+                    },
+                    "uuid": "3100a9cd-60b3-4354-b5c2-cfc93756b5ba"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
                     "description": "Rectangle of C10 on F.Silkscreen",
                     "pos": {
                         "x": 91.4,
@@ -5825,12 +5572,12 @@
                     "uuid": "0b5f7842-44c4-4939-b7b9-dfc9879fa90f"
                 },
                 {
-                    "description": "Pad 2 [GND] of C10 on F.Cu",
+                    "description": "Pad 1 [+3V3] of C10 on F.Cu",
                     "pos": {
                         "x": 92.0,
-                        "y": 15.05
+                        "y": 16.95
                     },
-                    "uuid": "3f28da55-f3b6-487b-9036-dcc76d66079a"
+                    "uuid": "c28d132e-2894-4438-8d51-4cc2f1fe9cca"
                 }
             ],
             "severity": "warning",
