@@ -1,24 +1,169 @@
 <mxfile host="app.diagrams.net">
-  <diagram id="tensorrail-mini" name="TensorRail-Mini">
-    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+  <diagram id="tensorrail-mini" name="TensorRail-Mini System Architecture">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="usb" value="USB-C&#xa;5 V power-only" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1"><mxGeometry x="80" y="220" width="150" height="70" as="geometry" /></mxCell>
-        <mxCell id="pwr" value="TPS62130 Rails&#xa;3.3 V + 1.2 V" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1"><mxGeometry x="290" y="200" width="170" height="110" as="geometry" /></mxCell>
-        <mxCell id="ina" value="INA219&#xa;1.2 V telemetry" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="510" y="205" width="150" height="80" as="geometry" /></mxCell>
-        <mxCell id="fpga" value="ECP5 FPGA Module&#xa;OrangeCrab 85F" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1"><mxGeometry x="720" y="145" width="210" height="190" as="geometry" /></mxCell>
-        <mxCell id="array" value="4x4 INT8&#xa;Systolic Array" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1"><mxGeometry x="755" y="195" width="140" height="80" as="geometry" /></mxCell>
-        <mxCell id="flash" value="W25Q128&#xa;SPI Flash" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1"><mxGeometry x="510" y="330" width="150" height="70" as="geometry" /></mxCell>
-        <mxCell id="osc" value="50 MHz&#xa;Oscillator" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1"><mxGeometry x="510" y="90" width="150" height="70" as="geometry" /></mxCell>
-        <mxCell id="exp" value="40-pin Expansion&#xa;GPIO / SPI / I2C" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1"><mxGeometry x="720" y="390" width="210" height="80" as="geometry" /></mxCell>
-        <mxCell id="jtag" value="JTAG Header" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1"><mxGeometry x="290" y="390" width="170" height="60" as="geometry" /></mxCell>
-        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;" edge="1" parent="1" source="usb" target="pwr"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;" edge="1" parent="1" source="pwr" target="ina"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;" edge="1" parent="1" source="ina" target="fpga"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;" edge="1" parent="1" source="flash" target="fpga"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;" edge="1" parent="1" source="osc" target="fpga"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;" edge="1" parent="1" source="jtag" target="fpga"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="title" value="TensorRail-Mini ECP5 INT8 AI Accelerator Carrier&#xa;Hardware architecture, validation flow, and review boundaries" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=24;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry x="60" y="30" width="900" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="Proof-of-concept FPGA carrier: USB-C power-only input, monitored 1.2 V core rail, SPI boot flash, 50 MHz clock, JTAG debug, expansion I/O, RTL and SPICE validation artifacts." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=13;fontColor=#475569;" vertex="1" parent="1">
+          <mxGeometry x="60" y="92" width="1050" height="45" as="geometry" />
+        </mxCell>
+
+        <mxCell id="carrier" value="Custom 80 x 50 mm carrier PCB boundary&#xa;2-layer FR4 prototype, KiCad 10 source, clean DRC signoff" style="swimlane;html=1;rounded=1;whiteSpace=wrap;startSize=34;fillColor=#f8fafc;strokeColor=#334155;fontSize=13;fontStyle=1;fontColor=#0f172a;swimlaneFillColor=#e2e8f0;" vertex="1" parent="1">
+          <mxGeometry x="50" y="150" width="1480" height="770" as="geometry" />
+        </mxCell>
+
+        <mxCell id="zone_power" value="Power Entry + Regulation" style="swimlane;html=1;rounded=1;whiteSpace=wrap;startSize=28;fillColor=#fff7ed;strokeColor=#f97316;fontSize=12;fontStyle=1;fontColor=#7c2d12;swimlaneFillColor=#ffedd5;" vertex="1" parent="1">
+          <mxGeometry x="85" y="205" width="360" height="390" as="geometry" />
+        </mxCell>
+        <mxCell id="zone_fpga" value="ECP5 Module + Accelerator Datapath" style="swimlane;html=1;rounded=1;whiteSpace=wrap;startSize=28;fillColor=#f0fdf4;strokeColor=#16a34a;fontSize=12;fontStyle=1;fontColor=#14532d;swimlaneFillColor=#dcfce7;" vertex="1" parent="1">
+          <mxGeometry x="500" y="205" width="580" height="390" as="geometry" />
+        </mxCell>
+        <mxCell id="zone_io" value="Configuration, Debug + Expansion" style="swimlane;html=1;rounded=1;whiteSpace=wrap;startSize=28;fillColor=#eef2ff;strokeColor=#6366f1;fontSize=12;fontStyle=1;fontColor=#312e81;swimlaneFillColor=#e0e7ff;" vertex="1" parent="1">
+          <mxGeometry x="1135" y="205" width="360" height="390" as="geometry" />
+        </mxCell>
+        <mxCell id="zone_validation" value="Evidence Artifacts Consumed by Syqnal Viewer" style="swimlane;html=1;rounded=1;whiteSpace=wrap;startSize=28;fillColor=#f8fafc;strokeColor=#64748b;fontSize=12;fontStyle=1;fontColor=#334155;swimlaneFillColor=#e2e8f0;" vertex="1" parent="1">
+          <mxGeometry x="85" y="635" width="1410" height="245" as="geometry" />
+        </mxCell>
+
+        <mxCell id="usb" value="J1 USB-C Receptacle&#xa;5 V sink only&#xa;CC1/CC2 Rd = 5.1 kOhm&#xa;D+/D-/SBU NC" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;fontSize=12;fontStyle=1;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="115" y="275" width="145" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="protection" value="Input protection + bulk cap&#xa;VBUS_RAW&#xa;reverse/ESD provision&#xa;test point: +5V" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#0284c7;fontSize=12;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="285" y="275" width="130" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="buck33" value="U1 TPS62130&#xa;3.3 V IO rail&#xa;feeds flash, INA219, IO&#xa;SW_3V3 / FB_3V3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#ea580c;fontSize=12;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="115" y="430" width="145" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="buck12" value="U2 TPS62130&#xa;1.2 V FPGA core rail&#xa;load-step target &lt; 100 mV&#xa;SW_1V2 / FB_1V2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#ea580c;fontSize=12;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="285" y="430" width="130" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="ina" value="U3 INA219 + shunt&#xa;monitors 1.2 V rail&#xa;I2C telemetry: SCL/SDA&#xa;VCORE_SENSED" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#dc2626;fontSize=12;fontStyle=1;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="285" y="560" width="130" height="95" as="geometry" />
+        </mxCell>
+
+        <mxCell id="module" value="MOD1 OrangeCrab / ECP5 Feather Module&#xa;ECP5-85F fabric, onboard DDR not used by this POC&#xa;carrier exposes boot, clock, power telemetry, SPI flash, GPIO" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#16a34a;fontSize=13;fontStyle=1;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="530" y="275" width="240" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="rtl_box" value="RTL control plane&#xa;control_fsm.v&#xa;top.v&#xa;reset / boot sequencing&#xa;valid-ready timing" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;fontSize=12;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="535" y="435" width="150" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="array" value="4 x 4 INT8 systolic array&#xa;systolic_array.v&#xa;mac_cell.v&#xa;INT8 x INT8 -&gt; INT32 accumulators&#xa;analytical peak: 256 MOPS @ 50 MHz" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#7e22ce;fontSize=12;fontStyle=1;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="710" y="425" width="210" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="golden" value="Golden model contract&#xa;simulation/golden_model.py&#xa;expected_result.csv&#xa;4 / 4 vectors match" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#ca8a04;fontSize=12;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="940" y="435" width="115" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="clock" value="U5 50 MHz oscillator&#xa;CLK_50M&#xa;no PLL in POC&#xa;timing headroom first" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0e7ff;strokeColor=#4f46e5;fontSize=12;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="820" y="275" width="110" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="boot" value="Reset / Boot controls&#xa;RESET_N, BOOT_N&#xa;LED_BUSY, LED_DONE, LED_HB&#xa;bring-up visibility" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ecfeff;strokeColor=#0891b2;fontSize=12;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="950" y="275" width="105" height="110" as="geometry" />
+        </mxCell>
+
+        <mxCell id="flash" value="U4 W25Q128 SPI flash&#xa;boot image storage&#xa;SPI_SCK / MOSI / MISO&#xa;FLASH_CS_N" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#ea580c;fontSize=12;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="275" width="135" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="jtag" value="J2 JTAG header&#xa;TCK / TMS / TDI / TDO&#xa;program + debug path&#xa;edge-accessible" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0e7ff;strokeColor=#4f46e5;fontSize=12;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="1325" y="275" width="135" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="expansion" value="J3 40-pin expansion header&#xa;GPIO bus, UART_TX/RX, I2C, SPI&#xa;external host / sensor / bench adapter&#xa;test points along critical nets" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef2ff;strokeColor=#6366f1;fontSize=12;fontStyle=1;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="430" width="290" height="120" as="geometry" />
+        </mxCell>
+
+        <mxCell id="repo" value="GitHub repo source package&#xa;KiCad schematic + PCB, RTL, SPICE, BOM, validation report" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#475569;fontSize=12;fontStyle=1;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="115" y="700" width="190" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="erc" value="Schematic ERC&#xa;0 violations&#xa;project ERC policy documents metadata-only noise&#xa;source: tensorrail_mini.kicad_sch" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;fontSize=12;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="345" y="700" width="170" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="drc" value="PCB DRC&#xa;0 violations&#xa;0 unconnected items&#xa;source: tensorrail_mini.kicad_pcb&#xa;notes: drc-exceptions.md" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;fontSize=12;fontStyle=1;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="555" y="700" width="170" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="rtl_sim" value="RTL simulation&#xa;Verilog testbench&#xa;4 / 4 vectors match&#xa;waveform-capable VCD flow" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#7e22ce;fontSize=12;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="765" y="700" width="170" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="spice" value="SPICE power transient&#xa;1.2 V rail load step&#xa;&lt; 50 mV undershoot target evidence&#xa;ngspice netlist" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#ea580c;fontSize=12;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="975" y="700" width="170" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="syqnal" value="Syqnal public project viewer&#xa;Schematic viewer + PCB viewer + HDL viewer + simulation evidence + Engineering Proof card" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ccfbf1;strokeColor=#0f766e;fontSize=12;fontStyle=1;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="1185" y="700" width="270" height="105" as="geometry" />
+        </mxCell>
+
+        <mxCell id="legend_power" value="Power rail" style="shape=partialRectangle;whiteSpace=wrap;html=1;top=0;bottom=0;right=0;fillColor=none;strokeColor=#ea580c;fontColor=#7c2d12;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1010" y="75" width="100" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_data" value="Data / control" style="shape=partialRectangle;whiteSpace=wrap;html=1;top=0;bottom=0;right=0;fillColor=none;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="75" width="110" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_validation" value="Validation evidence" style="shape=partialRectangle;whiteSpace=wrap;html=1;top=0;bottom=0;right=0;fillColor=none;strokeColor=#059669;fontColor=#14532d;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1245" y="75" width="140" height="24" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_usb_protect" value="+5V VBUS_RAW" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#ea580c;fontColor=#7c2d12;strokeWidth=2;" edge="1" parent="1" source="usb" target="protection">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_protect_33" value="+5V" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#ea580c;fontColor=#7c2d12;strokeWidth=2;" edge="1" parent="1" source="protection" target="buck33">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_protect_12" value="+5V" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#ea580c;fontColor=#7c2d12;strokeWidth=2;" edge="1" parent="1" source="protection" target="buck12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_33_module" value="+3V3 IO" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#ea580c;fontColor=#7c2d12;strokeWidth=2;" edge="1" parent="1" source="buck33" target="module">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_12_ina" value="+1V2 through shunt" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#ea580c;fontColor=#7c2d12;strokeWidth=2;" edge="1" parent="1" source="buck12" target="ina">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_ina_module" value="VCORE_SENSED" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#ea580c;fontColor=#7c2d12;strokeWidth=2;" edge="1" parent="1" source="ina" target="module">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_ina_i2c" value="SCL / SDA telemetry" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#2563eb;fontColor=#1e3a8a;strokeWidth=2;" edge="1" parent="1" source="ina" target="expansion">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_clock" value="CLK_50M" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#2563eb;fontColor=#1e3a8a;strokeWidth=2;" edge="1" parent="1" source="clock" target="module">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_boot" value="RESET_N / BOOT_N / LEDs" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#2563eb;fontColor=#1e3a8a;strokeWidth=2;" edge="1" parent="1" source="boot" target="module">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_module_rtl" value="fabric interfaces" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#16a34a;fontColor=#14532d;strokeWidth=2;" edge="1" parent="1" source="module" target="rtl_box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_rtl_array" value="valid / ready / accumulators" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#7e22ce;fontColor=#581c87;strokeWidth=2;" edge="1" parent="1" source="rtl_box" target="array">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_golden_array" value="expected matrix outputs" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;dashed=1;strokeColor=#ca8a04;fontColor=#854d0e;strokeWidth=2;" edge="1" parent="1" source="golden" target="array">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_flash_module" value="SPI boot bus" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#2563eb;fontColor=#1e3a8a;strokeWidth=2;" edge="1" parent="1" source="flash" target="module">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_jtag_module" value="JTAG program/debug" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#2563eb;fontColor=#1e3a8a;strokeWidth=2;" edge="1" parent="1" source="jtag" target="module">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_exp_module" value="GPIO / UART / SPI / I2C" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;startArrow=block;strokeColor=#2563eb;fontColor=#1e3a8a;strokeWidth=2;" edge="1" parent="1" source="expansion" target="module">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_repo_erc" value="schematic source" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#059669;fontColor=#14532d;strokeWidth=2;" edge="1" parent="1" source="repo" target="erc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_erc_drc" value="hardware signoff" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#059669;fontColor=#14532d;strokeWidth=2;" edge="1" parent="1" source="erc" target="drc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_drc_rtl" value="viewer evidence" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#059669;fontColor=#14532d;strokeWidth=2;" edge="1" parent="1" source="drc" target="rtl_sim">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_rtl_spice" value="sim evidence" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#059669;fontColor=#14532d;strokeWidth=2;" edge="1" parent="1" source="rtl_sim" target="spice">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_spice_syqnal" value="review packet" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#059669;fontColor=#14532d;strokeWidth=2;" edge="1" parent="1" source="spice" target="syqnal">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
