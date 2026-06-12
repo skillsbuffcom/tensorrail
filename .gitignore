@@ -4,7 +4,21 @@ out/
 rtl/sim/tb_sa
 # Local Codex repair backups
 hardware/*.ai_draft.kicad_sch
+hardware/*.fit_viewer_backup.kicad_sch
+hardware/*.no_worksheet_backup.kicad_sch
+hardware/*.pageframe_backup.kicad_pcb
 hardware/*_backup.kicad_sch
 hardware/*_backup.kicad_pcb
 hardware/*.proper_rebuild_backup.kicad_sch
 hardware/*.proper_rebuild_backup.kicad_pcb
+hardware/*.readable_backup.kicad_sch
+hardware/*.readable_backup.kicad_pcb
+hardware/*.symbolic_backup.kicad_sch
+hardware/*.visual_backup.kicad_sch
+hardware/*.visual_backup.kicad_pcb
+hardware/*.pre-clean
+hardware/*.pre-autoroute
+hardware/*.kicad_prl
+hardware/*.kicad_dru
+hardware/generate.py
+hardware/generate_pcb.py
