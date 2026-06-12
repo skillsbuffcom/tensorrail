@@ -72,7 +72,7 @@ Host PC / bench supply (USB-C cable - power only)
 │  W25Q128 SPI Flash ─── SPI ───────────►│  │  4×4 INT8  │  │    │
 │  Expansion header ───── GPIO/SPI/I2C ─►│  │  Systolic  │  │    │
 │                                        │  │  Array     │  │    │
-│  50 MHz Oscillator ─── CLK_50M ───────►│  Control FSM     │    │
+│  50 MHz clock source ─ CLK_50M ───────►│  Control FSM     │    │
 │                                        │  UART Status Port│    │
 │  JTAG J2  ◄──────────────── JTAG ──────│                  │    │
 │  Expansion J3 ◄──────────── GPIO ──────│                  │    │
@@ -104,7 +104,7 @@ Partial sums ↓  accumulate and drain north to south
 ```
 
 One 4×4×4 tile takes **24 cycles**: 16 (weight load) + 4 (compute) + 4 (drain).
-At 48 MHz that is ~500 ns per tile → **256 MOPS** INT8 (analytical estimate).
+At 50 MHz that is 480 ns per tile → **~267 MOPS** INT8 (analytical estimate).
 
 ---
 
@@ -114,11 +114,11 @@ All simulation runs are deterministic and self-checking.  The table below
 summarises passing criteria; source and run instructions are in
 [Quick Start](#quick-start).
 
-### RTL Self-Checking Testbench (`rtl/sim/tb_systolic_array.v`)
+### Python Golden Model (`simulation/golden_model.py`)
 
-The testbench loads 4 independent weight-activation pairs, runs the systolic
-array, and compares every output accumulator against the NumPy golden model.
-**4 / 4 output vectors match.** Expected results stored in `expected_result.csv`:
+The golden model computes a canonical 4×4 INT8 matrix multiply and writes the
+demo result to `expected_result.csv`. This is the CSV Syqnal should treat as a
+simulation/result artifact:
 
 | Output row | C[row,0] | C[row,1] | C[row,2] | C[row,3] |
 |---|---|---|---|---|
@@ -128,24 +128,27 @@ array, and compares every output accumulator against the NumPy golden model.
 | 3 | 5 | 15 | 20 | −635 |
 
 All accumulators are INT8 × INT8 → INT32, with no saturation or rounding in the
-test vectors.  The golden model in `simulation/golden_model.py` produces
-bit-exact results via NumPy's integer promotion rules.
-
-### Python Golden Model (`simulation/golden_model.py`)
-
-Computes weight-stationary systolic array output with explicit INT8 clamping and
-INT32 accumulation.  Built-in assertions verify:
+demo vectors. Built-in assertions also verify:
 
 - Matrix-multiply correctness against `np.matmul` reference
 - Overflow detection for all-max test case (127 × 127 × 4 = 64 516, within INT32)
-- Numerical equivalence with Verilog simulation outputs
+- Equivalence with the deterministic Verilog testbench vectors
 
 **Status: PASS** — no assertion failures on any test vector.
 
+### RTL Self-Checking Testbench (`rtl/sim/tb_systolic_array.v`)
+
+The Verilog testbench runs four separate deterministic tests that mirror the
+Python golden-model assertions: identity weights, all-ones weights, signed
+negative weights, and max-INT8 accumulation. **4 / 4 test cases pass** when run
+with Icarus Verilog.
+
 ### SPICE Power Model (`simulation/power_core_load_step.cir`)
 
-Behavioural transient simulation of the TPS62130 1.2 V buck converter under a
-200 mA load step (idle → full compute, 1 µs edge).
+Behavioural transient simulation of the U2 TPS62130 1.2 V buck converter. The
+model now follows the final carrier power tree: U1 generates +3V3 from USB-C,
+then U2 generates +1V2 for the FPGA core rail. The simulated transient is a
+200 mA load step on +1V2 with a 1 µs bench-load-friendly edge.
 
 | Metric | Simulated | Target |
 |---|---|---|
@@ -168,7 +171,8 @@ tensorrail-mini/
 ├── hardware/
 │   ├── tensorrail_mini.kicad_sch    — KiCad 10 schematic (version 20250114)
 │   │                                   USB-C power, 3V3+1V2 bucks, INA219,
-│   │                                   W25Q128 SPI flash, 50 MHz oscillator,
+│   │                                   W25Q128 SPI flash, PSRAM footprint,
+│   │                                   50 MHz module/system clock,
 │   │                                   JTAG header, 40-pin expansion header,
 │   │                                   reset/boot buttons, status LEDs, TPs
 │   ├── tensorrail_mini.kicad_pcb    — PCB layout
@@ -349,7 +353,9 @@ verilator --lint-only -Wall \
 ### 3 — SPICE Power Simulation
 
 Models the 1.2 V FPGA core rail response when the systolic array starts a
-tile computation (+350 mA load step in 5 ns).
+tile computation (+200 mA load step in 1 µs). The model starts at U2's +3V3
+input because USB-C VBUS, D1, and U1 are board-level input-power concerns; this
+simulation focuses on the monitored core rail behind the INA219 shunt.
 
 ```bash
 # Batch mode — prints pass/fail results and writes the RAW waveform file
@@ -381,7 +387,7 @@ Open the waveform:
 # Interactive ngspice viewer
 ngspice simulation/power_core_load_step.cir
 # Then at the ngspice prompt:
-#   plot V(vcore) V(vout) I(L1)
+#   plot V(vcore) V(vout) I(L2)
 ```
 
 ---
@@ -528,14 +534,14 @@ with Pruning, Trained Quantization and Huffman Coding"*, ICLR 2016.
 
 ---
 
-### Clock: 50 MHz oscillator, no PLL
+### Clock: 50 MHz system clock, no PLL
 
-**Choice:** External 50 MHz crystal oscillator (U4) driving the systolic array
-directly.  No PLL instantiated.
+**Choice:** 50 MHz `CLK_50M` system clock driving the systolic array directly.
+No PLL instantiated in the current RTL.
 
-**Cost:** Throughput is limited to 256 MOPS (4×4×4 MACs/cycle × 50 MHz × 2
-ops/MAC).  A PLL running at 200 MHz would give ~4× throughput with the same
-RTL.
+**Cost:** Throughput is limited to ~267 MOPS (4×4×4 MACs per tile, two INT8
+ops per MAC, 24 cycles per tile at 50 MHz). A PLL running at 200 MHz would give
+~4× throughput with the same RTL.
 
 **Gain:** Eliminates PLL lock-time sequencing from bring-up.  The critical path
 through the MAC cell (one 8-bit multiply + 32-bit accumulate) closes timing
@@ -558,9 +564,11 @@ workloads (core logic switching >> I/O toggle rate at inference duty cycles).
 One monitor on the highest-interest rail gives the most useful correlation
 between RTL activity and measured power without adding I²C bus complexity.
 
-**Validation:** The SPICE model (`hardware/tensorrail_power.cir`) models the
-1.2 V buck (TPS62130) under a step-load representative of the systolic array
-switching from idle to full compute.  Simulated ΔV < 50 mV under 200 mA step.
+**Validation:** The SPICE model (`simulation/power_core_load_step.cir`) models
+the U2 1.2 V buck (TPS62130) fed from +3V3 under a step-load representative of
+the systolic array switching from idle to full compute. The current source model
+uses a +200 mA step with a 1 µs edge so it can be correlated with a bench active
+load during bring-up.
 
 ---
 
@@ -596,7 +604,7 @@ This is a simulation prototype.  Be specific about what exists and what does not
 | DRC signoff notes | ✅ See [`hardware/drc-exceptions.md`](hardware/drc-exceptions.md) for the clean-pass history and pre-fab caveats |
 | PCB has been fabricated | ❌ No boards ordered |
 | Any bench measurements exist | ❌ No hardware exists |
-| Throughput claim (256 MOPS) is measured | ❌ Analytical estimate only |
+| Throughput claim (~267 MOPS) is measured | ❌ Analytical estimate only |
 | Power figures are measured | ❌ Simulation estimate only |
 | External-memory DMA is implemented | ❌ Stubs only; weights are hardcoded constants |
 | Requantisation unit exists in RTL | ❌ Python model only |

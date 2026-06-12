@@ -8,7 +8,7 @@
         <mxCell id="title" value="TensorRail-Mini ECP5 INT8 AI Accelerator Carrier&#xa;Hardware architecture, validation flow, and review boundaries" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=24;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
           <mxGeometry x="60" y="30" width="900" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="subtitle" value="Proof-of-concept FPGA carrier: USB-C power-only input, monitored 1.2 V core rail, SPI boot flash, 50 MHz clock, JTAG debug, expansion I/O, RTL and SPICE validation artifacts." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=13;fontColor=#475569;" vertex="1" parent="1">
+        <mxCell id="subtitle" value="Proof-of-concept FPGA carrier: USB-C power-only input, monitored 1.2 V core rail, SPI boot flash/PSRAM footprint, 50 MHz system clock, JTAG debug, expansion I/O, RTL and SPICE validation artifacts." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=13;fontColor=#475569;" vertex="1" parent="1">
           <mxGeometry x="60" y="92" width="1050" height="45" as="geometry" />
         </mxCell>
 
@@ -51,13 +51,13 @@
         <mxCell id="rtl_box" value="RTL control plane&#xa;control_fsm.v&#xa;top.v&#xa;reset / boot sequencing&#xa;valid-ready timing" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="535" y="435" width="150" height="115" as="geometry" />
         </mxCell>
-        <mxCell id="array" value="4 x 4 INT8 systolic array&#xa;systolic_array.v&#xa;mac_cell.v&#xa;INT8 x INT8 -&gt; INT32 accumulators&#xa;analytical peak: 256 MOPS @ 50 MHz" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#7e22ce;fontSize=12;fontStyle=1;spacing=8;" vertex="1" parent="1">
+        <mxCell id="array" value="4 x 4 INT8 systolic array&#xa;systolic_array.v&#xa;mac_cell.v&#xa;INT8 x INT8 -&gt; INT32 accumulators&#xa;analytical peak: ~267 MOPS @ 50 MHz" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#7e22ce;fontSize=12;fontStyle=1;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="710" y="425" width="210" height="125" as="geometry" />
         </mxCell>
         <mxCell id="golden" value="Golden model contract&#xa;simulation/golden_model.py&#xa;expected_result.csv&#xa;4 / 4 vectors match" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#ca8a04;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="940" y="435" width="115" height="115" as="geometry" />
         </mxCell>
-        <mxCell id="clock" value="U5 50 MHz oscillator&#xa;CLK_50M&#xa;no PLL in POC&#xa;timing headroom first" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0e7ff;strokeColor=#4f46e5;fontSize=12;spacing=8;" vertex="1" parent="1">
+        <mxCell id="clock" value="50 MHz system clock&#xa;CLK_50M&#xa;no PLL in POC&#xa;timing headroom first" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0e7ff;strokeColor=#4f46e5;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="820" y="275" width="110" height="110" as="geometry" />
         </mxCell>
         <mxCell id="boot" value="Reset / Boot controls&#xa;RESET_N, BOOT_N&#xa;LED_BUSY, LED_DONE, LED_HB&#xa;bring-up visibility" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ecfeff;strokeColor=#0891b2;fontSize=12;spacing=8;" vertex="1" parent="1">

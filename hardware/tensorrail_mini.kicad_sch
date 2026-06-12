@@ -490,7 +490,7 @@
 		(effects (font (size 1.5 1.5) bold) (justify left))
 		(uuid "215d6e18-716e-41ad-a0f5-412688e59dbc")
 	)
-	(text "VIN=+3V3  VOUT=+1V2 @ 1A (FPGA core)\nFB: R3/R4 divider  L2=2.2uH  Cout=2x22uF"
+	(text "VIN=+3V3  VOUT=+1V2 @ 1A (FPGA core)\nFB: R5/R6 divider  L2=1.5uH  Cout=100uF + local HF bypass"
 		(at 89.535 62.23 0)
 		(effects (font (size 1.27 1.27)) (justify left))
 		(uuid "fa07ecd2-dbdd-4e71-b402-d532cbafdd3b")
@@ -1527,7 +1527,7 @@
 		(property "Reference" "L2" (at 129.54 11.51 0)
 			(effects (font (size 1.27 1.27)))
 		)
-		(property "Value" "2.2uH" (at 129.54 21.51 0)
+		(property "Value" "1.5uH" (at 129.54 21.51 0)
 			(effects (font (size 1.27 1.27)))
 		)
 		(property "Footprint" "Inductor_SMD:L_0402_1005Metric" (at 129.54 16.51 0)

@@ -16,7 +16,7 @@ The module/carrier approach was chosen deliberately over a bare FPGA design:
 - Lets the RTL proof-of-concept run on real silicon cheaply while hardware is iterated.
 
 ```
-Host (USB-C cable, power + UART)
+Host / bench supply (USB-C cable, power-only)
         │
         ▼
   ┌─────────────────────────────────────────────────────┐
@@ -31,7 +31,7 @@ Host (USB-C cable, power + UART)
   │                          ▼                          │
   │                           ┌────────────────────┐    │
   │  W25Q128 SPI flash ─SPI─►│  ECP5 FPGA Module  │    │
-  │  50 MHz oscillator ─CLK─►│  (OrangeCrab 85F)  │    │
+  │  50 MHz system clock ───►│  (OrangeCrab 85F)  │    │
   │                           │                    │    │
   │                           │  ┌──────────────┐  │    │
   │                           │  │  4×4 INT8    │  │    │
@@ -108,10 +108,11 @@ For a single-row activation (1×K matmul): total latency = ROWS + K - 1 cycles.
 | DRAIN | ROWS = 4 | Wait for partial sums to reach south edge |
 | **Total** | **24 cycles** | Plus CSR overhead (~2 cycles) |
 
-At 48 MHz: 24 cycles × 20.8 ns = **~500 ns per 4×4×4 tile**.
-Useful arithmetic: 4×4×4×2 = 128 ops → 128 / 500ns = **256 MOPS** (INT8).
+At 50 MHz: 24 cycles × 20 ns = **480 ns per 4×4×4 tile**.
+Useful arithmetic: 4×4×4×2 = 128 ops → 128 / 480 ns = **~267 MOPS** (INT8).
 
-At 200 MHz (with PLL): ~61 MOPS per tile would achieve ~1 GOPS sustained.
+At 200 MHz (with PLL): the same tile cadence would reach **~1.07 GOPS** before
+memory and control overhead.
 These are analytical estimates; actual performance depends on memory bandwidth.
 
 ---
@@ -148,9 +149,9 @@ Planned next memory options:
 
 | Domain | Source | Frequency | Notes |
 |---|---|---|---|
-| `clk` | OrangeCrab 48 MHz oscillator | 48 MHz | Current top.v passthrough |
+| `clk` | `CLK_50M` system clock | 50 MHz | Current top.v passthrough |
 | `clk_fast` (future) | ECP5 EHXPLLL | 100–200 MHz | For higher throughput |
-| `uart_clk` | Derived from `clk` | (baud divider) | 115200 baud at 48 MHz |
+| `uart_clk` | Derived from `clk` | (baud divider) | 115200 baud at 50 MHz |
 
 The ECP5 EHXPLLL PLL is not instantiated in the current prototype. Adding it
 would allow the systolic array to run at 100–200 MHz with a simple CLKI_DIV /

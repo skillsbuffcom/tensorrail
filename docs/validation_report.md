@@ -13,8 +13,10 @@ the board has 0 unconnected items.
 
 | Check | Result | Notes |
 |---|---|---|
-| Python golden model | PASS | `simulation/golden_model.py` computes expected INT8 results and all built-in checks pass. |
-| BOM vs board intent | IMPROVED | BOM matches the v0.2 carrier: TPS62130 rails, INA219, W25Q128 flash + APS6404 PSRAM, CH340C UART bridge, Feather sockets, JTAG header, status LEDs. |
+| Python golden model | PASS | `simulation/golden_model.py` was run on 2026-06-12 and all built-in checks pass. |
+| RTL simulation source | ALIGNED | `rtl/sim/tb_systolic_array.v` mirrors the Python test vectors; `iverilog`/`vvp` are not installed in this environment, so the Verilog run was not re-executed here. |
+| SPICE source | ALIGNED | `simulation/power_core_load_step.cir` now models the final +3V3-fed U2 1.2 V rail with L2 = 1.5 uH and a +200 mA / 1 us load step. `ngspice` is not installed here, so transient results were not re-executed. |
+| BOM vs board intent | IMPROVED | BOM now includes TPS62130 rails, INA219, W25Q128 flash, APS6404 PSRAM footprint, CH340C UART footprint, Feather sockets, JTAG header, status LEDs, and test points. |
 | PCB critical net naming | PASS | Switch nodes, feedback nets, INA219 shunt, CC1/CC2, JTAG pins, LED anode/cathode nets all named. |
 | Documentation honesty | IMPROVED | Docs describe USB-C as power-only; external-memory DMA flagged as future work. |
 | Schematic ERC — KiCad 10 CLI | PASS | 0 violations under project ERC policy. |
@@ -39,9 +41,9 @@ single-sheet portfolio schematic: KiCad library symbol drift, the custom USB-C
 footprint link warning, intentional one-pin global labels, and known generated
 wire-stub artifacts.
 
-All `multiple_net_names` violations (previously flagging a +3V3/GND short caused
-by INA219 U3 left-side pins overlapping CH340C U6 right-side pins at X = 48.26 mm)
-have been resolved by repositioning U3X from g(48) to g(60).
+All `multiple_net_names` violations from the earlier generated schematic have
+been resolved. The current schematic keeps real electrical checks enabled while
+ignoring metadata-only library drift and generated-label noise.
 
 ## PCB DRC Result (clean, run 2026-06-12)
 

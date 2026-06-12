@@ -81,7 +81,7 @@ With bench supply disconnected and no module fitted:
 
 ### 1.3 Load-Step Check (Optional, Phase 1)
 
-Apply a 350 mA load step to the 1.2 V rail with an active load (e.g., BK Precision 8500) or a 3.4 Ω power resistor switched with a FET.
+Apply a 200 mA load step to the 1.2 V rail with an active load (e.g., BK Precision 8500) or a 6 Ω power resistor switched with a FET.
 
 - Capture V(1V2) on oscilloscope: 200 MSa/s, 20 MHz BW.
 - Compare to `simulation/power_core_load_step.cir` SPICE result.
@@ -172,7 +172,7 @@ After bitstream loads:
 - [ ] **D2** (power): still on (3.3 V present — carrier, not FPGA)
 - [ ] **D3** (busy): should pulse briefly during tile computation, then off
 - [ ] **D4** (done): should pulse once when tile finishes
-- [ ] **D5** (heartbeat): should blink at ~0.7 Hz (26-bit counter at 48 MHz)
+- [ ] **D5** (heartbeat): should blink at ~0.75 Hz (26-bit counter at 50 MHz)
 
 If heartbeat does not blink, the design is not running — check configuration status.
 
@@ -245,8 +245,8 @@ a tile computation, and read back the results. Compare to `expected_psum.hex`.
 | Metric | Threshold |
 |---|---|
 | Bit-exact psum match | 100% (all 4 output columns) |
-| Tile done latency | ≤ 30 µs at 48 MHz |
-| Total board current at 5 V | ≤ 200 mA during compute |
+| Tile done latency | ≤ 30 µs at 50 MHz |
+| Total board current at 5 V | ≤ 250 mA during compute |
 | LED D5 heartbeat | Blinking continuously |
 
 ---
