@@ -103,65 +103,65 @@
           <mxGeometry x="1245" y="75" width="140" height="24" as="geometry" />
         </mxCell>
 
-        <mxCell id="e_usb_protect" value="+5V VBUS_RAW" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#ea580c;fontColor=#7c2d12;strokeWidth=2;" edge="1" parent="1" source="usb" target="protection">
+        <mxCell id="e_usb_protect" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#ea580c;fontColor=#7c2d12;strokeWidth=2;" edge="1" parent="1" source="usb" target="protection">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_protect_33" value="+5V" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#ea580c;fontColor=#7c2d12;strokeWidth=2;" edge="1" parent="1" source="protection" target="buck33">
+        <mxCell id="e_protect_33" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#ea580c;fontColor=#7c2d12;strokeWidth=2;" edge="1" parent="1" source="protection" target="buck33">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_protect_12" value="+5V" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#ea580c;fontColor=#7c2d12;strokeWidth=2;" edge="1" parent="1" source="protection" target="buck12">
+        <mxCell id="e_protect_12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#ea580c;fontColor=#7c2d12;strokeWidth=2;" edge="1" parent="1" source="protection" target="buck12">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_33_module" value="+3V3 IO" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#ea580c;fontColor=#7c2d12;strokeWidth=2;" edge="1" parent="1" source="buck33" target="module">
+        <mxCell id="e_33_module" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#ea580c;fontColor=#7c2d12;strokeWidth=2;" edge="1" parent="1" source="buck33" target="module">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_12_ina" value="+1V2 through shunt" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#ea580c;fontColor=#7c2d12;strokeWidth=2;" edge="1" parent="1" source="buck12" target="ina">
+        <mxCell id="e_12_ina" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#ea580c;fontColor=#7c2d12;strokeWidth=2;" edge="1" parent="1" source="buck12" target="ina">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_ina_module" value="VCORE_SENSED" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#ea580c;fontColor=#7c2d12;strokeWidth=2;" edge="1" parent="1" source="ina" target="module">
+        <mxCell id="e_ina_module" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#ea580c;fontColor=#7c2d12;strokeWidth=2;" edge="1" parent="1" source="ina" target="module">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_ina_i2c" value="SCL / SDA telemetry" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#2563eb;fontColor=#1e3a8a;strokeWidth=2;" edge="1" parent="1" source="ina" target="expansion">
+        <mxCell id="e_ina_i2c" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#2563eb;fontColor=#1e3a8a;strokeWidth=2;" edge="1" parent="1" source="ina" target="expansion">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_clock" value="CLK_50M" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#2563eb;fontColor=#1e3a8a;strokeWidth=2;" edge="1" parent="1" source="clock" target="module">
+        <mxCell id="e_clock" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#2563eb;fontColor=#1e3a8a;strokeWidth=2;" edge="1" parent="1" source="clock" target="module">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_boot" value="RESET_N / BOOT_N / LEDs" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#2563eb;fontColor=#1e3a8a;strokeWidth=2;" edge="1" parent="1" source="boot" target="module">
+        <mxCell id="e_boot" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#2563eb;fontColor=#1e3a8a;strokeWidth=2;" edge="1" parent="1" source="boot" target="module">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_module_rtl" value="fabric interfaces" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#16a34a;fontColor=#14532d;strokeWidth=2;" edge="1" parent="1" source="module" target="rtl_box">
+        <mxCell id="e_module_rtl" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#16a34a;fontColor=#14532d;strokeWidth=2;" edge="1" parent="1" source="module" target="rtl_box">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_rtl_array" value="valid / ready / accumulators" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#7e22ce;fontColor=#581c87;strokeWidth=2;" edge="1" parent="1" source="rtl_box" target="array">
+        <mxCell id="e_rtl_array" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#7e22ce;fontColor=#581c87;strokeWidth=2;" edge="1" parent="1" source="rtl_box" target="array">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_golden_array" value="expected matrix outputs" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;dashed=1;strokeColor=#ca8a04;fontColor=#854d0e;strokeWidth=2;" edge="1" parent="1" source="golden" target="array">
+        <mxCell id="e_golden_array" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;dashed=1;strokeColor=#ca8a04;fontColor=#854d0e;strokeWidth=2;" edge="1" parent="1" source="golden" target="array">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_flash_module" value="SPI boot bus" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#2563eb;fontColor=#1e3a8a;strokeWidth=2;" edge="1" parent="1" source="flash" target="module">
+        <mxCell id="e_flash_module" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#2563eb;fontColor=#1e3a8a;strokeWidth=2;" edge="1" parent="1" source="flash" target="module">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_jtag_module" value="JTAG program/debug" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#2563eb;fontColor=#1e3a8a;strokeWidth=2;" edge="1" parent="1" source="jtag" target="module">
+        <mxCell id="e_jtag_module" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#2563eb;fontColor=#1e3a8a;strokeWidth=2;" edge="1" parent="1" source="jtag" target="module">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_exp_module" value="GPIO / UART / SPI / I2C" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;startArrow=block;strokeColor=#2563eb;fontColor=#1e3a8a;strokeWidth=2;" edge="1" parent="1" source="expansion" target="module">
+        <mxCell id="e_exp_module" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;startArrow=block;strokeColor=#2563eb;fontColor=#1e3a8a;strokeWidth=2;" edge="1" parent="1" source="expansion" target="module">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <mxCell id="e_repo_erc" value="schematic source" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#059669;fontColor=#14532d;strokeWidth=2;" edge="1" parent="1" source="repo" target="erc">
+        <mxCell id="e_repo_erc" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#059669;fontColor=#14532d;strokeWidth=2;" edge="1" parent="1" source="repo" target="erc">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_erc_drc" value="hardware signoff" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#059669;fontColor=#14532d;strokeWidth=2;" edge="1" parent="1" source="erc" target="drc">
+        <mxCell id="e_erc_drc" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#059669;fontColor=#14532d;strokeWidth=2;" edge="1" parent="1" source="erc" target="drc">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_drc_rtl" value="viewer evidence" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#059669;fontColor=#14532d;strokeWidth=2;" edge="1" parent="1" source="drc" target="rtl_sim">
+        <mxCell id="e_drc_rtl" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#059669;fontColor=#14532d;strokeWidth=2;" edge="1" parent="1" source="drc" target="rtl_sim">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_rtl_spice" value="sim evidence" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#059669;fontColor=#14532d;strokeWidth=2;" edge="1" parent="1" source="rtl_sim" target="spice">
+        <mxCell id="e_rtl_spice" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#059669;fontColor=#14532d;strokeWidth=2;" edge="1" parent="1" source="rtl_sim" target="spice">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_spice_syqnal" value="review packet" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#059669;fontColor=#14532d;strokeWidth=2;" edge="1" parent="1" source="spice" target="syqnal">
+        <mxCell id="e_spice_syqnal" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#059669;fontColor=#14532d;strokeWidth=2;" edge="1" parent="1" source="spice" target="syqnal">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
