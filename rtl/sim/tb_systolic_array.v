@@ -2,7 +2,7 @@
 // tb_systolic_array.v — Self-Checking Testbench for systolic_array.v
 // TensorRail-Mini · ECP5 Carrier Board Proof-of-Concept
 //
-// Tests a 4×4 INT8 weight-stationary systolic array against four deterministic
+// Tests a 4×4 INT8 weight-stationary systolic array against six deterministic
 // test vectors that match simulation/golden_model.py exactly (bitwise).
 //
 // Run with Icarus Verilog:
@@ -11,19 +11,26 @@
 //       ../mac_cell.v ../systolic_array.v \
 //       tb_systolic_array.v
 //   vvp tb_sa
+//   echo "Exit code: $?"    # must be 0 on success, non-zero on any failure
 //
 // VCD is written to rtl/sim/tensorrail_tb.vcd (relative to working directory).
+//
+// Exit codes:
+//   0 — all tests passed (vvp exits via $finish)
+//   1 — one or more tests failed (vvp exits via $fatal, non-zero exit code)
+//       Icarus Verilog maps $fatal severity 1 → process exit code 1,
+//       which is what CI runners check with `if [ $? -ne 0 ]; then ...`.
 //
 // Expected console output:
 //
 //   === TEST 1: Identity weight matrix ===
-//   Expected  col[0]=         1  col[1]=         2  col[2]=         3  col[3]=         4
-//   Actual    col[0]=         1  col[1]=         2  col[2]=         3  col[3]=         4
+//   Expected  col[0]=00000001  col[1]=00000002  col[2]=00000003  col[3]=00000004
+//   Actual    col[0]=00000001  col[1]=00000002  col[2]=00000003  col[3]=00000004
 //   [PASS] Test 1
 //
 //   === TEST 2: All-ones weight matrix ===
-//   Expected  col[0]=         8  col[1]=         8  col[2]=         8  col[3]=         8
-//   Actual    col[0]=         8  col[1]=         8  col[2]=         8  col[3]=         8
+//   Expected  col[0]=00000008  col[1]=00000008  col[2]=00000008  col[3]=00000008
+//   Actual    col[0]=00000008  col[1]=00000008  col[2]=00000008  col[3]=00000008
 //   [PASS] Test 2
 //
 //   === TEST 3: Signed negative weights ===
@@ -32,11 +39,21 @@
 //   [PASS] Test 3
 //
 //   === TEST 4: Max INT8 values ===
-//   Expected  col[0]=     FC04  col[1]=     FC04  col[2]=     FC04  col[3]=     FC04
-//   Actual    col[0]=     FC04  col[1]=     FC04  col[2]=     FC04  col[3]=     FC04
+//   Expected  col[0]=0000FC04  col[1]=0000FC04  col[2]=0000FC04  col[3]=0000FC04
+//   Actual    col[0]=0000FC04  col[1]=0000FC04  col[2]=0000FC04  col[3]=0000FC04
 //   [PASS] Test 4
 //
-//   === All 4 tests passed ===
+//   === TEST 5: Back-to-back tiles without reset (accumulation) ===
+//   Expected  col[0]=00000014  col[1]=00000014  col[2]=00000014  col[3]=00000014
+//   Actual    col[0]=00000014  col[1]=00000014  col[2]=00000014  col[3]=00000014
+//   [PASS] Test 5
+//
+//   === TEST 6: Zero activation vector (boundary) ===
+//   Expected  col[0]=00000000  col[1]=00000000  col[2]=00000000  col[3]=00000000
+//   Actual    col[0]=00000000  col[1]=00000000  col[2]=00000000  col[3]=00000000
+//   [PASS] Test 6
+//
+//   === All 6 tests passed ===
 // =============================================================================
 
 `timescale 1ns / 1ps
@@ -325,24 +342,88 @@ module tb_systolic_array;
             expected_psum[j*ACC_WIDTH +: ACC_WIDTH] = 32'd64516;    // 0x0000FC04
 
         drain_check(expected_psum, 4);
-        repeat(8) @(posedge clk);
+        repeat(4) @(posedge clk);
+
+        // ──────────────────────────────────────────────────────────────────────
+        // TEST 5 — Back-to-back tiles without reset (multi-vector accumulation)
+        //
+        // This tests the accumulator across two sequential inject_act calls
+        // with no intervening flush or reset.  A weight-stationary array must
+        // accumulate: psum = W*A1 + W*A2 = W*(A1+A2).
+        //
+        // W = 1 everywhere.  A1 = all 2s.  A2 = all 3s.
+        // psum[c] = (2 + 3) * ROWS = 5 * 4 = 20 = 32'h00000014  for all c.
+        //
+        // Catches bugs where the accumulator resets between injections, or where
+        // a pipeline flush leaks into the next tile's accumulation window.
+        // ──────────────────────────────────────────────────────────────────────
+        $display("\n=== TEST 5: Back-to-back tiles without reset (accumulation) ===");
+        do_reset;
+
+        col_weights = {ROWS{8'h01}};
+        for (j = 0; j < COLS; j = j + 1)
+            load_column(j[($clog2(COLS)-1):0], col_weights);
+
+        act_vec = {ROWS{8'h02}};           // A1 = all 2s
+        inject_act(act_vec);
+
+        act_vec = {ROWS{8'h03}};           // A2 = all 3s (no reset or flush between)
+        inject_act(act_vec);
+
+        expected_psum = {(COLS*ACC_WIDTH){1'b0}};
+        for (j = 0; j < COLS; j = j + 1)
+            expected_psum[j*ACC_WIDTH +: ACC_WIDTH] = 32'd20;       // 0x00000014
+
+        drain_check(expected_psum, 5);
+        repeat(4) @(posedge clk);
+
+        // ──────────────────────────────────────────────────────────────────────
+        // TEST 6 — Zero activation vector (boundary)
+        //
+        // W = +127 everywhere.  A = all 0s.
+        // psum[c] = sum_r( 127 * 0 ) = 0  for all c.
+        //
+        // Catches cells that fail to gate out their output when act = 0,
+        // or that have spurious residual from a previous tile.
+        // ──────────────────────────────────────────────────────────────────────
+        $display("\n=== TEST 6: Zero activation vector (boundary) ===");
+        do_reset;
+
+        col_weights = {ROWS{8'h7F}};       // +127
+        for (j = 0; j < COLS; j = j + 1)
+            load_column(j[($clog2(COLS)-1):0], col_weights);
+
+        act_vec = {(ROWS*DATA_WIDTH){1'b0}};   // all zeros
+        inject_act(act_vec);
+
+        expected_psum = {(COLS*ACC_WIDTH){1'b0}};   // expected: all zeros
+
+        drain_check(expected_psum, 6);
+        repeat(4) @(posedge clk);
 
         // ── Summary ────────────────────────────────────────────────────────────
         $display("");
-        if (fail_cnt == 0)
+        if (fail_cnt == 0) begin
             $display("=== All %0d tests passed ===", pass_cnt);
-        else
+            $finish;
+        end else begin
             $display("=== %0d/%0d tests FAILED — see above ===",
                      fail_cnt, pass_cnt + fail_cnt);
-
-        $finish;
+            // $fatal causes vvp to exit with a non-zero code.
+            // CI runners check the exit code; $finish would silently exit 0
+            // even when tests fail, making the CI gate useless.
+            $fatal(1, "Simulation FAILED: %0d test(s) did not match expected output.",
+                   fail_cnt);
+        end
     end
 
     // ── Watchdog: abort if sim runs more than 10 000 cycles ───────────────────
+    // Uses $fatal so the CI job registers a failure when the watchdog fires.
+    // A timeout almost certainly indicates a hang in inject_act or drain_check
+    // (e.g. act_ready never asserted, or psum_valid stuck low).
     initial begin
         #(CLK_HALF * 2 * 10_000);
-        $display("[TIMEOUT] Simulation exceeded 10 000 cycles — aborting");
-        $finish;
+        $fatal(1, "[TIMEOUT] Simulation exceeded 10 000 cycles — hung in inject_act or drain_check.");
     end
 
 endmodule

@@ -85,18 +85,21 @@ Rfbb  vsense 0      100k    ; R6 bottom divider
 
 * ── Compensator / error amplifier ────────────────────────────────────────────
 * Type-II (PI + lead) compensator modelled as a Laplace-domain VCVS.
-* Transfer function:   Gc(s) = Aol × (1 + s/ωz) / (s/ωp × (1 + s/ωp2))
 *
-*   Aol  = 60 dB open-loop gain  (6 orders of magnitude, typical OTA)
-*   fz   = 30 kHz  zero  (cancels LC double-pole at ~24 kHz for 2.2 µH / 100 µF)
-*   fp1  = 0 Hz    integrating pole (gives zero steady-state error)
-*   fp2  = 1 MHz   high-frequency roll-off (above Fsw/2, for stability margin)
+* Transfer function:   Gc(s) = Aol × (1 + s/ωz) / ( s × (1 + s/ωp2) )
 *
-* The LAPLACE keyword is supported by ngspice and XSpice-compatible simulators.
-* It is an educational approximation; a real TPS62130 loop has additional
-* internal poles but this model reproduces the dominant transient behaviour.
+*   Aol  = 1000  (60 dB open-loop gain, typical OTA)
+*   ωz   = 2π × 30 kHz  zero (cancels LC double-pole at ~24 kHz)
+*   1/s  = true integrating pole at DC (zero steady-state error)
+*   ωp2  = 2π × 1 MHz   HF roll-off pole (above Fsw/2, for stability)
+*
+* Denominator form: s × (1 + s/ωp2)  — pure 1/s integrator times one HF pole.
+* Using 3.14159265358979 for π for full double-precision accuracy.
+*
+* The LAPLACE keyword requires ngspice 36+ (XSpice Laplace block).
 Eea  verr  0  LAPLACE { V(vref) - V(vsense) }
-+    { 1000 * (1 + s/(2*3.14159*30000)) / ( (s/(2*3.14159*1e6) + 1) * s/(2*3.14159*1000) ) }
++    { 1000.0 * (1.0 + s/(2*3.14159265358979*30000))
++      / ( s * (1.0 + s/(2*3.14159265358979*1e6)) ) }
 
 * ── Duty cycle: D = Verr clamped to [0.02, 0.95] ────────────────────────────
 * In steady state D = Vout/Vin = 1.2/3.3 = 0.36.
@@ -152,8 +155,7 @@ Rbrd  vfpga  vcore   2.5m    ; copper trace resistance
 *
 * Active current (4×4 systolic array tile computation at 50 MHz):  Iactive ≈ 250 mA
 *   This is an educational bring-up estimate for the small 4×4 fabric. Real
-*   dynamic current depends on
-*   switching activity, operand values, and PVT corner.
+*   dynamic current depends on switching activity, operand values, and PVT corner.
 *
 * Load step:
 *   t = 0 → 50 µs    : Iidle  = 50 mA  (post-reset settling)
