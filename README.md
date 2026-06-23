@@ -196,6 +196,11 @@ tensorrail-mini/
 │   └── sim/
 │       └── tb_systolic_array.v      — Self-checking testbench, VCD output
 │
+├── asic/
+│   └── openlane/tensorrail_mac_tile/
+│       ├── config.json              — Experimental sky130 OpenLane flow config
+│       └── pin_order.cfg            — Pin placement hints for the ASIC macro
+│
 ├── simulation/
 │   ├── golden_model.py              — NumPy INT8 reference + SNR benchmark
 │   └── power_core_load_step.cir     — ngspice 1.2 V buck load-step transient
@@ -350,7 +355,29 @@ verilator --lint-only -Wall \
 
 ---
 
-### 3 — SPICE Power Simulation
+### 3 — Experimental ASIC Flow (OpenLane / OpenROAD)
+
+TensorRail-Mini is primarily an FPGA carrier-board project, but the core
+`systolic_array` RTL can also be treated as a small educational ASIC macro.
+The OpenLane scaffold in `asic/openlane/tensorrail_mac_tile/` is provided for
+Syqnal ASIC-flow verification and layout preview generation.
+
+Run with OpenLane and a Sky130 PDK installed:
+
+```bash
+cd asic/openlane/tensorrail_mac_tile
+python3 -m openlane --pdk-root "$PDK_ROOT" --run-tag syqnal_ci config.json
+```
+
+The generated `runs/syqnal_ci*/results/final/gds/*.gds` file is the real GDSII
+layout artifact. Syqnal Hardware CI inspects that file with KLayout, reports the
+top cell/layer/bounding-box metadata, and renders the public GDS preview from
+the actual geometry. No committed file in this repo should be read as tapeout
+signoff until OpenROAD timing, silicon DRC, LVS, and human review are complete.
+
+---
+
+### 4 — SPICE Power Simulation
 
 Models the 1.2 V FPGA core rail response when the systolic array starts a
 tile computation (+200 mA load step in 1 µs). The model starts at U2's +3V3
@@ -392,7 +419,7 @@ ngspice simulation/power_core_load_step.cir
 
 ---
 
-### 4 — Export KiCad Gerbers
+### 5 — Export KiCad Gerbers
 
 ```bash
 # Creates hardware/gerbers/ and hardware/gerbers/tensorrail_mini_gerbers.zip
@@ -419,7 +446,7 @@ The resulting zip is ready to upload to JLCPCB, PCBWay, or OSH Park.
 
 ---
 
-### 5 — FPGA Synthesis (Yosys + nextpnr-ecp5)
+### 6 — FPGA Synthesis (Yosys + nextpnr-ecp5)
 
 ```bash
 # Synthesise to ECP5 gate-level netlist
@@ -450,7 +477,7 @@ Resource estimates (Yosys, 4×4 array — analytical, not from real P&R):
 
 ---
 
-### 6 — 3D Enclosure
+### 7 — 3D Enclosure
 
 ```bash
 # Interactive preview

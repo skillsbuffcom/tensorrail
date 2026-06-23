@@ -1,0 +1,20 @@
+{
+  "DESIGN_NAME": "systolic_array",
+  "PDK": "sky130A",
+  "STD_CELL_LIBRARY": "sky130_fd_sc_hd",
+  "VERILOG_FILES": [
+    "dir::../../../rtl/mac_cell.v",
+    "dir::../../../rtl/systolic_array.v"
+  ],
+  "CLOCK_PORT": "clk",
+  "CLOCK_PERIOD": 20,
+  "FP_CORE_UTIL": 35,
+  "PL_TARGET_DENSITY": 0.45,
+  "DIE_AREA": "0 0 900 900",
+  "FP_PDN_MULTILAYER": true,
+  "FP_PIN_ORDER_CFG": "dir::pin_order.cfg",
+  "SYNTH_READ_BLACKBOX_LIB": false,
+  "RUN_KLAYOUT_DRC": true,
+  "RUN_MAGIC_DRC": true,
+  "RUN_LVS": true
+}
