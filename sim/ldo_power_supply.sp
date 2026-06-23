@@ -31,8 +31,9 @@ Cin2    vin   0   100n
 * LAPLACE { expr } { H(s) } requires ngspice 40+
 Eref   vref   0  VALUE { 1.25 }
 
-* Output voltage divider feedback (sets Vout = Vref*(1 + R1/R2) = 3.3V)
-Rfb1   vout   vfb  560
+* Output voltage divider feedback.
+* Rfb1/Rfb2 = 393.6/240 targets Vout = 1.25*(1 + 393.6/240) = 3.300 V.
+Rfb1   vout   vfb  393.6
 Rfb2   vfb    0    240
 
 * Error amplifier with single dominant pole
