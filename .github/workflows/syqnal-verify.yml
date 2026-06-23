@@ -24,7 +24,7 @@ jobs:
           fetch-depth: 1
 
       - name: Run Syqnal Hardware CI
-        uses: syqnal/hardware-ci@v2.3.3
+        uses: syqnal/hardware-ci@v2.3.4
         with:
           syqnal_project_slug: "tensorrail-mini-fpga-int8-ai-accelerator"
           run_drc: "true"
