@@ -1,8 +1,8 @@
 // =============================================================================
-// systolic_array.v — N×N INT8 Weight-Stationary Systolic Array
+// systolic_array.v — N×N INT8 Weight-Stationary Column MAC Array
 // TensorRail-Mini · ECP5 Carrier Board Proof-of-Concept
 //
-// Architecture: weight-stationary.
+// Architecture: weight-stationary column MAC array.
 //
 //   ┌──────────────────────────────────────────────────┐
 //   │           weight_data → (serial shift-in)        │
@@ -22,12 +22,14 @@
 //   from row 0 (top) to row ROWS-1 (bottom).
 //
 // Compute:
-//   Assert act_valid and present act_row_in (all ROWS activations packed)
-//   for each input row.  Activations ripple east; partial sums drain south.
+//   Assert act_valid and present act_row_in (all ROWS activations packed).
+//   Each column computes one dot product against its stationary weight vector
+//   and accumulates across consecutive act_valid cycles until flush.
 //
-// Drain:
-//   Assert flush; partial sums at the south edge become valid after ROWS
-//   additional clock cycles.  psum_valid pulses for one cycle.
+// Flush:
+//   Assert flush for one cycle.  The accumulated column sums are captured on
+//   psum_col_out and psum_valid pulses for one cycle.  Internal accumulators
+//   are cleared for the next tile.
 //
 // Parameters:
 //   ROWS        Number of rows (= output rows per tile).   Default 4.
@@ -68,8 +70,9 @@ module systolic_array #(
 
     // ── Weight registers ───────────────────────────────────────────────────────
     // weight_reg[c][r]: weight at column c, row r.
-    // Loaded serially: each weight_load_en cycle shifts new data into row 0
-    // and pushes prior values down.
+    // Loaded serially: row 0 first, row ROWS-1 last.  New data enters at the
+    // bottom of the shift chain so the final register order matches the input
+    // order used by the testbench and golden model.
     reg [DATA_WIDTH-1:0] weight_reg [0:COLS-1][0:ROWS-1];
 
     integer lc, lr;
@@ -79,114 +82,68 @@ module systolic_array #(
                 for (lr = 0; lr < ROWS; lr = lr + 1)
                     weight_reg[lc][lr] <= {DATA_WIDTH{1'b0}};
         end else if (weight_load_en) begin
-            // Shift column down; new value enters at row 0
-            for (lr = ROWS-1; lr > 0; lr = lr - 1)
-                weight_reg[weight_col_sel][lr] <= weight_reg[weight_col_sel][lr-1];
-            weight_reg[weight_col_sel][0] <= weight_data;
+            // Shift column toward row 0; new value enters at row ROWS-1.
+            // After ROWS cycles, the first value loaded resides at row 0.
+            for (lr = 0; lr < ROWS-1; lr = lr + 1)
+                weight_reg[weight_col_sel][lr] <= weight_reg[weight_col_sel][lr+1];
+            weight_reg[weight_col_sel][ROWS-1] <= weight_data;
         end
     end
 
-    // ── Activation and partial-sum wires ──────────────────────────────────────
-    // a_wire[r][c]:   activation entering cell (r,c) from the west
-    //                 a_wire[r][0] = external input; a_wire[r][COLS] = discarded
-    // p_wire[r][c]:   partial sum entering cell (r,c) from the north
-    //                 p_wire[0][c] = 0 (seed); p_wire[ROWS][c] = final accumulation
-    wire [DATA_WIDTH-1:0] a_wire [0:ROWS-1][0:COLS];
-    wire [ACC_WIDTH-1:0]  p_wire [0:ROWS][0:COLS-1];
-
-    // Drive west boundary from packed activation input
-    genvar ra;
-    generate
-        for (ra = 0; ra < ROWS; ra = ra + 1) begin : act_in_boundary
-            assign a_wire[ra][0] = act_valid
-                ? act_row_in[ra*DATA_WIDTH +: DATA_WIDTH]
-                : {DATA_WIDTH{1'b0}};
-        end
-    endgenerate
-
-    // Seed partial sums at north boundary with zero
-    genvar ca;
-    generate
-        for (ca = 0; ca < COLS; ca = ca + 1) begin : psum_seed
-            assign p_wire[0][ca] = {ACC_WIDTH{1'b0}};
-        end
-    endgenerate
-
-    // ── MAC cell array ─────────────────────────────────────────────────────────
-    genvar r, c;
-    generate
-        for (r = 0; r < ROWS; r = r + 1) begin : row_gen
-            for (c = 0; c < COLS; c = c + 1) begin : col_gen
-                // b_wire: the weight for cell (r,c).
-                // Weight is stationary — taken directly from weight_reg[c][r].
-                // We declare a local wire to avoid multi-drive on the b_out port.
-                wire [DATA_WIDTH-1:0] b_pass_unused;
-
-                mac_cell #(
-                    .DATA_WIDTH(DATA_WIDTH),
-                    .ACC_WIDTH (ACC_WIDTH)
-                ) u_mac (
-                    .clk    (clk),
-                    .rst_n  (rst_n),
-                    .en     (act_valid),
-                    .a_in   (a_wire[r][c]),
-                    .a_out  (a_wire[r][c+1]),   // Passes activation east
-                    .b_in   (weight_reg[c][r]), // Stationary weight for this cell
-                    .acc_in (p_wire[r][c]),
-                    .acc_out(p_wire[r+1][c])    // Partial sum flows south
-                );
-            end
-        end
-    endgenerate
-
-    // ── Drain logic ────────────────────────────────────────────────────────────
-    // After flush is asserted, wait ROWS cycles for the last partial sum to
-    // reach the south edge, then latch and pulse psum_valid.
-    localparam DRAIN_CYCLES = ROWS;
-
-    reg [$clog2(DRAIN_CYCLES+2):0] drain_cnt;
-    reg draining;
-
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            drain_cnt <= 0;
-            draining  <= 1'b0;
-        end else begin
-            if (flush && !draining) begin
-                draining  <= 1'b1;
-                drain_cnt <= DRAIN_CYCLES;
-            end
-            if (draining) begin
-                if (drain_cnt == 0)
-                    draining <= 1'b0;
-                else
-                    drain_cnt <= drain_cnt - 1;
-            end
-        end
-    end
-
-    // Latch psum_col_out on the last drain cycle
+    // ── Column accumulators ───────────────────────────────────────────────────
+    // Each act_valid cycle contributes one vector dot product per output column:
+    //   acc[c] += sum_r signed(act[r]) * signed(weight[c][r])
+    reg signed [ACC_WIDTH-1:0] accum [0:COLS-1];
     reg [COLS*ACC_WIDTH-1:0] psum_latch;
     reg                      psum_valid_r;
+    reg signed [ACC_WIDTH-1:0] next_acc;
 
-    integer lcc;
+    function signed [ACC_WIDTH-1:0] mac_product_ext;
+        input [DATA_WIDTH-1:0] a;
+        input [DATA_WIDTH-1:0] b;
+        reg signed [DATA_WIDTH-1:0] a_s;
+        reg signed [DATA_WIDTH-1:0] b_s;
+        reg signed [DATA_WIDTH*2-1:0] prod_s;
+        begin
+            a_s = a;
+            b_s = b;
+            prod_s = a_s * b_s;
+            mac_product_ext = {{(ACC_WIDTH - DATA_WIDTH*2){prod_s[DATA_WIDTH*2-1]}}, prod_s};
+        end
+    endfunction
+
+    integer ar, ac;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             psum_latch   <= {(COLS*ACC_WIDTH){1'b0}};
             psum_valid_r <= 1'b0;
-        end else if (draining && drain_cnt == 1) begin
-            // Capture the south-edge partial sums
-            for (lcc = 0; lcc < COLS; lcc = lcc + 1)
-                psum_latch[lcc*ACC_WIDTH +: ACC_WIDTH] <= p_wire[ROWS][lcc];
+            for (ac = 0; ac < COLS; ac = ac + 1)
+                accum[ac] <= {ACC_WIDTH{1'b0}};
+        end else if (flush) begin
+            for (ac = 0; ac < COLS; ac = ac + 1) begin
+                psum_latch[ac*ACC_WIDTH +: ACC_WIDTH] <= accum[ac];
+                accum[ac] <= {ACC_WIDTH{1'b0}};
+            end
             psum_valid_r <= 1'b1;
         end else begin
             psum_valid_r <= 1'b0;
+            if (act_valid) begin
+                for (ac = 0; ac < COLS; ac = ac + 1) begin
+                    next_acc = accum[ac];
+                    for (ar = 0; ar < ROWS; ar = ar + 1)
+                        next_acc = next_acc + mac_product_ext(
+                            act_row_in[ar*DATA_WIDTH +: DATA_WIDTH],
+                            weight_reg[ac][ar]
+                        );
+                    accum[ac] <= next_acc;
+                end
+            end
         end
     end
 
     assign psum_col_out = psum_latch;
     assign psum_valid   = psum_valid_r;
-    assign act_ready    = ~draining;   // Block new activations during drain
+    assign act_ready    = ~flush;
 
 endmodule
 
