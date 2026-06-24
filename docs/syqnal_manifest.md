@@ -9,7 +9,7 @@ This file maps TensorRail-Mini repository content to Syqnal project evidence.
 | Schematic | `hardware/tensorrail_mini.kicad_sch` |
 | PCB layout | `hardware/tensorrail_mini.kicad_pcb`, `hardware/tensorrail_mini.kicad_pro` |
 | BOM | `hardware/bom.csv` |
-| RTL | `rtl/mac_cell.v`, `rtl/systolic_array.v`, `rtl/control_fsm.v`, `rtl/top.v` |
+| RTL | `rtl/mac_cell.v`, `rtl/systolic_array.v`, `rtl/tensorrail_asic_top.v`, `rtl/control_fsm.v`, `rtl/top.v` |
 | RTL simulation | `rtl/sim/tb_systolic_array.v`, generated `rtl/sim/tensorrail_tb.vcd` |
 | ASIC flow / GDSII | `asic/openlane/tensorrail_mac_tile/config.json`, `asic/openlane/tensorrail_mac_tile/pin_order.cfg`, generated OpenLane `runs/*/results/final/gds/*.gds` |
 | Golden model | `simulation/golden_model.py`, generated `expected_result.csv`, `hex/*.hex` |
@@ -36,6 +36,7 @@ TensorRail-Mini is a simulation prototype. It is suitable for demonstrating
 hardware-system thinking, RTL verification, power modelling, and manufacturable
 design intent. The `asic/` directory is an experimental OpenLane ASIC-flow
 scaffold for Syqnal verification and education; it does not mean this FPGA
-carrier-board project has been taped out. It is not yet suitable for fabrication
-without KiCad ERC/DRC, ASIC DRC/LVS/timing signoff, netlist review, and a human
-PCB/IC design review.
+carrier-board project has been taped out. The conceptual floorplan SVG is not
+GDS/OAS evidence. The project is not suitable for fabrication without KiCad
+ERC/DRC, ASIC DRC/LVS/timing signoff, netlist review, and a human PCB/IC design
+review.

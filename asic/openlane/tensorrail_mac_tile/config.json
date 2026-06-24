@@ -1,10 +1,11 @@
 {
-  "DESIGN_NAME": "systolic_array",
+  "DESIGN_NAME": "tensorrail_asic_top",
   "PDK": "sky130A",
   "STD_CELL_LIBRARY": "sky130_fd_sc_hd",
   "VERILOG_FILES": [
     "dir::../../../rtl/mac_cell.v",
-    "dir::../../../rtl/systolic_array.v"
+    "dir::../../../rtl/systolic_array.v",
+    "dir::../../../rtl/tensorrail_asic_top.v"
   ],
   "CLOCK_PORT": "clk",
   "CLOCK_PERIOD": 20,

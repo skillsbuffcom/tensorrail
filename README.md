@@ -191,6 +191,7 @@ tensorrail-mini/
 ├── rtl/
 │   ├── mac_cell.v                   — Single INT8 MAC cell (parameterisable)
 │   ├── systolic_array.v             — 4×4 weight-stationary systolic mesh
+│   ├── tensorrail_asic_top.v        — ASIC/OpenLane wrapper around the MAC array
 │   ├── control_fsm.v                — Tile orchestrator + CSR register map
 │   ├── top.v                        — ECP5 top-level: UART, memory stubs, LEDs
 │   └── sim/
@@ -357,10 +358,11 @@ verilator --lint-only -Wall \
 
 ### 3 — Experimental ASIC Flow (OpenLane / OpenROAD)
 
-TensorRail-Mini is primarily an FPGA carrier-board project, but the core
-`systolic_array` RTL can also be treated as a small educational ASIC macro.
-The OpenLane scaffold in `asic/openlane/tensorrail_mac_tile/` is provided for
-Syqnal ASIC-flow verification and layout preview generation.
+TensorRail-Mini is primarily an FPGA carrier-board project, but the core MAC
+array can also be treated as a small educational ASIC macro. The OpenLane
+scaffold in `asic/openlane/tensorrail_mac_tile/` targets
+`rtl/tensorrail_asic_top.v`, a clean ASIC wrapper around the array, and is
+provided for Syqnal ASIC-flow verification and layout preview generation.
 
 Run with OpenLane and a Sky130 PDK installed:
 

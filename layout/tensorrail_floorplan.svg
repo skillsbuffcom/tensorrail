@@ -56,6 +56,6 @@
     <rect x="747" y="350" width="9" height="12" rx="1"/><rect x="747" y="490" width="9" height="12" rx="1"/>
     <rect x="747" y="630" width="9" height="12" rx="1"/>
   </g>
-  <text x="400" y="778" fill="#555" font-family="monospace" font-size="10" text-anchor="middle">TensorRail Mini  |  sky130B  |  1200x1200 um  |  5 metal layers</text>
-  <text x="400" y="793" fill="#333" font-family="monospace" font-size="8" text-anchor="middle">DRC: 0 violations  |  LVS: MATCHED  |  Util: 73.2%  |  Fmax: 250 MHz</text>
+  <text x="400" y="778" fill="#555" font-family="monospace" font-size="10" text-anchor="middle">TensorRail Mini  |  conceptual ASIC floorplan  |  not a GDS/OAS preview</text>
+  <text x="400" y="793" fill="#333" font-family="monospace" font-size="8" text-anchor="middle">Run OpenLane CI for real GDS, DRC, LVS, STA, and power evidence</text>
 </svg>
