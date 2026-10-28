@@ -160,15 +160,67 @@ module tensorrail_top (
         .done_pulse     (done_pulse)
     );
 
-    // ── UART transmitter (115200 baud, 8N1) ──────────────────────────────────
-    // Minimal byte-at-a-time shift register.  Sends 'D' (0x44) on done_pulse.
-    // A real design would DMA the full psum_col_out word over multiple bytes.
+    // ── Result latch ──────────────────────────────────────────────────────────
+    // psum_valid pulses for one cycle as the array drains; hold the four column
+    // sums for the UART report.
+    reg [COLS*ACC_WIDTH-1:0] psum_latched;
+    always @(posedge clk or negedge rst_sync_n)
+        if (!rst_sync_n)     psum_latched <= {(COLS*ACC_WIDTH){1'b0}};
+        else if (psum_valid) psum_latched <= psum_col_out;
+
+    // ── UART status report (115200 baud, 8N1) ────────────────────────────────
+    // After each tile: "TILE_DONE psum[0]=XXXXXXXX psum[1]=... psum[3]=XXXXXXXX\r\n"
+    // (79 bytes, hex, most significant nibble first).
     localparam BAUD_DIV = 48_000_000 / 115_200;  // = 417 counts
+    localparam MSG_LEN  = 9 + COLS * 17 + 2;     // "TILE_DONE" + 4 × " psum[n]=XXXXXXXX" + CRLF
+
+    function [7:0] hex_digit(input [3:0] n);
+        hex_digit = (n < 4'd10) ? (8'h30 + {4'd0, n}) : (8'h37 + {4'd0, n});  // '0'-'9', 'A'-'F'
+    endfunction
+
+    // Byte i of the report for the latched sums p.
+    function [7:0] msg_byte(input [6:0] i, input [COLS*ACC_WIDTH-1:0] p);
+        reg [6:0]  j;
+        reg [6:0]  g;
+        reg [6:0]  k;
+        reg [31:0] w;
+        begin
+            if (i < 7'd9) begin
+                case (i)
+                    7'd0: msg_byte = "T"; 7'd1: msg_byte = "I"; 7'd2: msg_byte = "L";
+                    7'd3: msg_byte = "E"; 7'd4: msg_byte = "_"; 7'd5: msg_byte = "D";
+                    7'd6: msg_byte = "O"; 7'd7: msg_byte = "N"; default: msg_byte = "E";
+                endcase
+            end else if (i == MSG_LEN - 2) begin
+                msg_byte = 8'h0D;
+            end else if (i == MSG_LEN - 1) begin
+                msg_byte = 8'h0A;
+            end else begin
+                j = i - 7'd9;
+                g = j / 7'd17;            // which column sum
+                k = j % 7'd17;            // position within " psum[n]=XXXXXXXX"
+                w = p >> (g * ACC_WIDTH);
+                case (k)
+                    7'd0: msg_byte = " ";
+                    7'd1: msg_byte = "p";
+                    7'd2: msg_byte = "s";
+                    7'd3: msg_byte = "u";
+                    7'd4: msg_byte = "m";
+                    7'd5: msg_byte = "[";
+                    7'd6: msg_byte = 8'h30 + {1'b0, g};
+                    7'd7: msg_byte = "]";
+                    7'd8: msg_byte = "=";
+                    default: msg_byte = hex_digit(w[31 - 4 * (k - 9) -: 4]);
+                endcase
+            end
+        end
+    endfunction
 
     reg [$clog2(BAUD_DIV+1):0] baud_cnt;
     reg [9:0]  tx_shift;    // {stop, data[7:0], start}
-    reg [3:0]  tx_bits;     // Remaining bits to send
-    reg        tx_active;
+    reg [3:0]  tx_bits;     // Remaining bits of the current byte
+    reg        tx_active;   // Sending the report
+    reg [6:0]  msg_idx;     // Byte of the report being sent
 
     always @(posedge clk or negedge rst_sync_n) begin
         if (!rst_sync_n) begin
@@ -176,21 +228,32 @@ module tensorrail_top (
             tx_shift  <= 10'h3FF;
             tx_bits   <= 4'd0;
             tx_active <= 1'b0;
+            msg_idx   <= 7'd0;
         end else begin
             if (done_pulse && !tx_active) begin
-                // Load: start bit=0, data=0x44 ('D'), stop=1
-                tx_shift  <= {1'b1, 8'h44, 1'b0};
+                // Start bit, first byte, stop bit
+                tx_shift  <= {1'b1, msg_byte(7'd0, psum_latched), 1'b0};
                 tx_bits   <= 4'd10;
                 tx_active <= 1'b1;
+                msg_idx   <= 7'd0;
                 baud_cnt  <= 0;
             end else if (tx_active) begin
                 if (baud_cnt == BAUD_DIV - 1) begin
                     baud_cnt <= 0;
-                    tx_shift <= {1'b1, tx_shift[9:1]};  // LSB first
-                    if (tx_bits == 1)
-                        tx_active <= 1'b0;
-                    else
-                        tx_bits <= tx_bits - 1;
+                    if (tx_bits == 1) begin
+                        // Byte done: next byte, or stop after the line feed.
+                        if (msg_idx == MSG_LEN - 1) begin
+                            tx_active <= 1'b0;
+                            tx_shift  <= 10'h3FF;
+                        end else begin
+                            msg_idx  <= msg_idx + 7'd1;
+                            tx_shift <= {1'b1, msg_byte(msg_idx + 7'd1, psum_latched), 1'b0};
+                            tx_bits  <= 4'd10;
+                        end
+                    end else begin
+                        tx_shift <= {1'b1, tx_shift[9:1]};  // LSB first
+                        tx_bits  <= tx_bits - 1;
+                    end
                 end else begin
                     baud_cnt <= baud_cnt + 1;
                 end

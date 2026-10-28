@@ -127,6 +127,7 @@ module control_fsm #(
     reg [15:0] row_cnt;   // Activation rows injected so far
     reg [15:0] col_cnt;   // Weight columns loaded so far
     reg [15:0] k_cnt;     // Weight shifts within current column
+    reg        flushed;   // DRAIN has issued its one flush
 
     // ── FSM ────────────────────────────────────────────────────────────────────
     // rst_n is the asynchronous reset; CTRL[1] (csr_sw_reset) is a synchronous
@@ -145,6 +146,7 @@ module control_fsm #(
             act_valid      <= 1'b0;
             flush          <= 1'b0;
             csr_done       <= 1'b0;
+            flushed        <= 1'b0;
         end else if (csr_sw_reset) begin
             state          <= S_IDLE;
             row_cnt        <= 16'b0;
@@ -157,6 +159,7 @@ module control_fsm #(
             act_valid      <= 1'b0;
             flush          <= 1'b0;
             csr_done       <= 1'b0;
+            flushed        <= 1'b0;
         end else begin
             // Defaults — asserted for one cycle only unless held below
             weight_load_en <= 1'b0;
@@ -170,6 +173,7 @@ module control_fsm #(
                     row_cnt <= 16'b0;
                     col_cnt <= 16'b0;
                     k_cnt   <= 16'b0;
+                    flushed <= 1'b0;
                     if (csr_start)
                         state <= S_LOAD_W;
                 end
@@ -213,9 +217,14 @@ module control_fsm #(
                     end
                 end
 
-                // ── Flush and wait for psum_valid ─────────────────────────────
+                // ── Flush once and wait for psum_valid ────────────────────────
+                // A second flush would latch the just-cleared accumulators and
+                // overwrite the tile's sums with zeros.
                 S_DRAIN: begin
-                    flush <= 1'b1;
+                    if (!flushed) begin
+                        flush   <= 1'b1;
+                        flushed <= 1'b1;
+                    end
                     if (psum_valid)
                         state <= S_DONE;
                 end
@@ -258,6 +267,8 @@ module control_fsm #(
             if (weight_load_en) assert($past(state) == S_LOAD_W);
             if (act_valid)      assert($past(state) == S_COMPUTE);
             if (flush)          assert($past(state) == S_DRAIN);
+            // One flush per tile: a second would clear the sums it just latched.
+            if (flush)          assert(!$past(flush));
 
             // busy and done never overlap.
             assert(!(busy && done_pulse));
