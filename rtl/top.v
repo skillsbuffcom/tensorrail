@@ -199,7 +199,7 @@ module tensorrail_top (
                 j = i - 7'd9;
                 g = j / 7'd17;            // which column sum
                 k = j % 7'd17;            // position within " psum[n]=XXXXXXXX"
-                w = p >> (g * ACC_WIDTH);
+                w = p[g * ACC_WIDTH +: ACC_WIDTH];
                 case (k)
                     7'd0: msg_byte = " ";
                     7'd1: msg_byte = "p";
