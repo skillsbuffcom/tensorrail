@@ -234,6 +234,37 @@ module control_fsm #(
     assign busy       = (state != S_IDLE) && (state != S_DONE);
     assign done_pulse = csr_done;
 
+`ifdef FORMAL
+    // ── Formal properties (SymbiYosys: formal/control_fsm.sby) ─────────────────
+    reg f_past_valid = 1'b0;
+    always @(posedge clk) f_past_valid <= 1'b1;
+
+    // Start in reset.
+    always @(*) if (!f_past_valid) assume(!rst_n);
+
+    always @(posedge clk) begin
+        // The state register only ever holds one of the five encoded states.
+        if (rst_n) assert(state <= S_DONE);
+
+        if (f_past_valid && rst_n && $past(rst_n)) begin
+            // done pulses for exactly one cycle, as the FSM lands back in IDLE.
+            if (done_pulse) assert(state == S_IDLE && !$past(done_pulse));
+
+            // CTRL[1] soft reset returns to IDLE with all outputs quiet.
+            if ($past(csr_sw_reset))
+                assert(state == S_IDLE && !weight_load_en && !act_valid && !flush && !done_pulse);
+
+            // Array control strobes only come from their own states.
+            if (weight_load_en) assert($past(state) == S_LOAD_W);
+            if (act_valid)      assert($past(state) == S_COMPUTE);
+            if (flush)          assert($past(state) == S_DRAIN);
+
+            // busy and done never overlap.
+            assert(!(busy && done_pulse));
+        end
+    end
+`endif
+
 endmodule
 
 `default_nettype wire

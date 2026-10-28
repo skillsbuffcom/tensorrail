@@ -1,0 +1,16 @@
+# Formal proof of the TensorRail control FSM (properties live in rtl/control_fsm.v under `ifdef FORMAL).
+# Run: sby -f formal/control_fsm.sby
+
+[options]
+mode prove
+depth 20
+
+[engines]
+smtbmc yices
+
+[script]
+read -formal control_fsm.v
+prep -top control_fsm
+
+[files]
+../rtl/control_fsm.v
