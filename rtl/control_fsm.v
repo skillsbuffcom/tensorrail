@@ -129,8 +129,23 @@ module control_fsm #(
     reg [15:0] k_cnt;     // Weight shifts within current column
 
     // ── FSM ────────────────────────────────────────────────────────────────────
+    // rst_n is the asynchronous reset; CTRL[1] (csr_sw_reset) is a synchronous
+    // soft reset. Keeping it out of the async branch lets this block map onto
+    // flip-flops with a single asynchronous clear (synthesis rejects mixing them).
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n || csr_sw_reset) begin
+        if (!rst_n) begin
+            state          <= S_IDLE;
+            row_cnt        <= 16'b0;
+            col_cnt        <= 16'b0;
+            k_cnt          <= 16'b0;
+            weight_data    <= {DATA_WIDTH{1'b0}};
+            weight_col_sel <= {$clog2(COLS){1'b0}};
+            weight_load_en <= 1'b0;
+            act_row_in     <= {(ROWS*DATA_WIDTH){1'b0}};
+            act_valid      <= 1'b0;
+            flush          <= 1'b0;
+            csr_done       <= 1'b0;
+        end else if (csr_sw_reset) begin
             state          <= S_IDLE;
             row_cnt        <= 16'b0;
             col_cnt        <= 16'b0;
