@@ -188,14 +188,15 @@ screen /dev/ttyUSB0 115200
 ```
 
 After power-on + bitstream load, the FSM auto-starts one tile computation.
-Expected UART output within ~1 ms:
+Expected UART output within ~7 ms (79 bytes at 115200 baud):
 
 ```
-D
+TILE_DONE psum[0]=00000000 psum[1]=00000018 psum[2]=00000030 psum[3]=00000048
 ```
 
-(The letter 'D' = 0x44 is transmitted by the UART stub on `done_pulse`. A full
-production design would send the hex psum values.)
+(The four column sums in hex. The control FSM's stub loads weight *c* into
+column *c* and feeds rows whose activations equal the row index, so column *c*
+sums to 24·*c*. `rtl/sim/tb_top.v` checks this line in simulation.)
 
 If no output is received:
 1. Verify TP5 (UART\_TX) toggles with an oscilloscope during the computation window.
