@@ -224,7 +224,8 @@ module tensorrail_top (
     endfunction
 
     reg [$clog2(BAUD_DIV+1):0] baud_cnt;
-    localparam [$clog2(BAUD_DIV+1):0] BAUD_LAST = BAUD_DIV - 1;
+    localparam integer BAUD_LAST_I = BAUD_DIV - 1;
+    localparam [$clog2(BAUD_DIV+1):0] BAUD_LAST = BAUD_LAST_I[$clog2(BAUD_DIV+1):0];
     reg [9:0]  tx_shift;    // {stop, data[7:0], start}
     reg [3:0]  tx_bits;     // Remaining bits of the current byte
     reg        tx_active;   // Sending the report
