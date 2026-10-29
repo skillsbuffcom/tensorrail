@@ -49,12 +49,16 @@
 `timescale 1ns / 1ps
 `default_nettype none
 
+// The board top keeps the short file name top.v (build scripts and the LPF use it).
+/* verilator lint_off DECLFILENAME */
 module tensorrail_top (
+/* verilator lint_on DECLFILENAME */
     input  wire        clk_in,       // 48 MHz from ECP5 module oscillator
     input  wire        rst_n,        // Active-low reset (carrier J3 pin 3)
 
     // UART (to external 3.3 V USB-UART adapter)
     output wire        uart_tx,
+    /* verilator lint_off UNUSEDSIGNAL */
     input  wire        uart_rx,      // Not used in this stub
 
     // Future memory 0 — weight buffer (SPI stub)
@@ -68,6 +72,7 @@ module tensorrail_top (
     output wire        psram1_sck,
     output wire        psram1_si,
     input  wire        psram1_so,
+    /* verilator lint_on UNUSEDSIGNAL */
 
     // Status LEDs on carrier board
     output wire [3:0]  led
@@ -125,7 +130,9 @@ module tensorrail_top (
     wire [4:0]  csr_addr;
     wire [31:0] csr_wdata;
     wire        csr_wen;
-    wire [31:0] csr_rdata;
+    /* verilator lint_off UNUSEDSIGNAL */
+    wire [31:0] csr_rdata;  // no host reads CSRs on this board yet
+    /* verilator lint_on UNUSEDSIGNAL */
 
     // One-shot start: pulse csr_wen with start bit set two cycles after reset
     reg [2:0] start_sr;
@@ -217,6 +224,7 @@ module tensorrail_top (
     endfunction
 
     reg [$clog2(BAUD_DIV+1):0] baud_cnt;
+    localparam [$clog2(BAUD_DIV+1):0] BAUD_LAST = BAUD_DIV - 1;
     reg [9:0]  tx_shift;    // {stop, data[7:0], start}
     reg [3:0]  tx_bits;     // Remaining bits of the current byte
     reg        tx_active;   // Sending the report
@@ -238,7 +246,7 @@ module tensorrail_top (
                 msg_idx   <= 7'd0;
                 baud_cnt  <= 0;
             end else if (tx_active) begin
-                if (baud_cnt == BAUD_DIV - 1) begin
+                if (baud_cnt == BAUD_LAST) begin
                     baud_cnt <= 0;
                     if (tx_bits == 1) begin
                         // Byte done: next byte, or stop after the line feed.

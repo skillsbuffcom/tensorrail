@@ -48,7 +48,9 @@ module control_fsm #(
 
     // Simple CSR bus (word address, 32-bit data)
     input  wire [4:0]            csr_addr,
-    input  wire [31:0]           csr_wdata,
+    /* verilator lint_off UNUSEDSIGNAL */
+    input  wire [31:0]           csr_wdata,  // registers are 16 bits wide; [31:16] ignored
+    /* verilator lint_on UNUSEDSIGNAL */
     input  wire                  csr_wen,
     output reg  [31:0]           csr_rdata,
 
@@ -61,7 +63,10 @@ module control_fsm #(
     output reg                        act_valid,
     input  wire                       act_ready,
 
+    // Part of the array interface; the sums go straight from the array to top.v.
+    /* verilator lint_off UNUSEDSIGNAL */
     input  wire [COLS*ACC_WIDTH-1:0]  psum_col_out,
+    /* verilator lint_on UNUSEDSIGNAL */
     input  wire                       psum_valid,
     output reg                        flush,
 
@@ -115,7 +120,8 @@ module control_fsm #(
     always @(*) begin
         case (csr_addr)
             5'h00: csr_rdata = {29'b0, state};
-            5'h01: csr_rdata = {26'b0, csr_done, (state != S_IDLE && state != S_DONE), state};
+            // STATUS, as documented above: [0] busy, [1] done, [5:3] state.
+            5'h01: csr_rdata = {26'b0, state, 1'b0, csr_done, (state != S_IDLE && state != S_DONE)};
             5'h02: csr_rdata = {16'b0, csr_tile_m};
             5'h03: csr_rdata = {16'b0, csr_tile_n};
             5'h04: csr_rdata = {16'b0, csr_tile_k};

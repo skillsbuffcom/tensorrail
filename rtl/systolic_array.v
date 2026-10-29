@@ -128,6 +128,9 @@ module systolic_array #(
         end else begin
             psum_valid_r <= 1'b0;
             if (act_valid) begin
+                // next_acc is a per-column scratch sum, never a register:
+                // blocking assignment is intended here.
+                /* verilator lint_off BLKSEQ */
                 for (ac = 0; ac < COLS; ac = ac + 1) begin
                     next_acc = accum[ac];
                     for (ar = 0; ar < ROWS; ar = ar + 1)
@@ -136,6 +139,7 @@ module systolic_array #(
                             weight_reg[ac][ar]
                         );
                     accum[ac] <= next_acc;
+                    /* verilator lint_on BLKSEQ */
                 end
             end
         end

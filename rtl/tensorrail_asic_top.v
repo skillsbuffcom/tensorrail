@@ -10,7 +10,10 @@
 `timescale 1ns / 1ps
 `default_nettype none
 
+// A second top module by design (the OpenLane macro); top.v is the board top.
+/* verilator lint_off MULTITOP */
 module tensorrail_asic_top #(
+/* verilator lint_on MULTITOP */
     parameter ROWS       = 4,
     parameter COLS       = 4,
     parameter DATA_WIDTH = 8,
