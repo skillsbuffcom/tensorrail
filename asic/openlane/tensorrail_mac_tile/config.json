@@ -17,5 +17,9 @@
   "SYNTH_READ_BLACKBOX_LIB": false,
   "RUN_KLAYOUT_DRC": true,
   "RUN_MAGIC_DRC": true,
-  "RUN_LVS": true
+  "RUN_LVS": true,
+  "RUN_POST_GRT_RESIZER_TIMING": true,
+  "RUN_HEURISTIC_DIODE_INSERTION": true,
+  "DIODE_ON_PORTS": "in",
+  "GRT_ANTENNA_ITERS": 10
 }
