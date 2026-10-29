@@ -90,15 +90,23 @@ module systolic_array #(
         end
     end
 
-    // ── Column accumulators ───────────────────────────────────────────────────
-    // Each act_valid cycle contributes one vector dot product per output column:
-    //   acc[c] += sum_r signed(act[r]) * signed(weight[c][r])
+    // ── Column dot products and accumulators (two pipeline stages) ─────────────
+    // Stage 1 registers each column's dot product for the cycle's activations:
+    //   dot[c] = sum_r signed(act[r]) * signed(weight[c][r])
+    // Stage 2 adds it into the column accumulator. Splitting the multiply/add
+    // tree from the 32-bit accumulate is what lets the ASIC macro meet 50 MHz.
+    // A flush folds a product still in stage 1 into the latched sum, so flush
+    // and psum_valid keep their one-cycle timing.
+    localparam DOT_WIDTH = DATA_WIDTH * 2 + $clog2(ROWS);
+
     reg signed [ACC_WIDTH-1:0] accum [0:COLS-1];
+    reg signed [DOT_WIDTH-1:0] dot   [0:COLS-1];
+    reg                        dot_valid;
     reg [COLS*ACC_WIDTH-1:0] psum_latch;
     reg                      psum_valid_r;
-    reg signed [ACC_WIDTH-1:0] next_acc;
+    reg signed [DOT_WIDTH-1:0] next_dot;
 
-    function signed [ACC_WIDTH-1:0] mac_product_ext;
+    function signed [DOT_WIDTH-1:0] mac_product_ext;
         input [DATA_WIDTH-1:0] a;
         input [DATA_WIDTH-1:0] b;
         reg signed [DATA_WIDTH-1:0] a_s;
@@ -108,40 +116,62 @@ module systolic_array #(
             a_s = a;
             b_s = b;
             prod_s = a_s * b_s;
-            mac_product_ext = {{(ACC_WIDTH - DATA_WIDTH*2){prod_s[DATA_WIDTH*2-1]}}, prod_s};
+            mac_product_ext = {{(DOT_WIDTH - DATA_WIDTH*2){prod_s[DATA_WIDTH*2-1]}}, prod_s};
         end
     endfunction
 
+    function signed [ACC_WIDTH-1:0] dot_ext;
+        input signed [DOT_WIDTH-1:0] d;
+        dot_ext = {{(ACC_WIDTH - DOT_WIDTH){d[DOT_WIDTH-1]}}, d};
+    endfunction
+
+    // Stage 1: dot products
     integer ar, ac;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            dot_valid <= 1'b0;
+            for (ac = 0; ac < COLS; ac = ac + 1)
+                dot[ac] <= {DOT_WIDTH{1'b0}};
+        end else begin
+            // As before the pipeline, activations arriving with flush are not counted.
+            dot_valid <= act_valid && !flush;
+            if (act_valid && !flush) begin
+                // next_dot is a per-column scratch sum, never a register:
+                // blocking assignment is intended here.
+                /* verilator lint_off BLKSEQ */
+                for (ac = 0; ac < COLS; ac = ac + 1) begin
+                    next_dot = {DOT_WIDTH{1'b0}};
+                    for (ar = 0; ar < ROWS; ar = ar + 1)
+                        next_dot = next_dot + mac_product_ext(
+                            act_row_in[ar*DATA_WIDTH +: DATA_WIDTH],
+                            weight_reg[ac][ar]
+                        );
+                    dot[ac] <= next_dot;
+                    /* verilator lint_on BLKSEQ */
+                end
+            end
+        end
+    end
+
+    // Stage 2: accumulate, latch on flush
+    integer fc;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             psum_latch   <= {(COLS*ACC_WIDTH){1'b0}};
             psum_valid_r <= 1'b0;
-            for (ac = 0; ac < COLS; ac = ac + 1)
-                accum[ac] <= {ACC_WIDTH{1'b0}};
+            for (fc = 0; fc < COLS; fc = fc + 1)
+                accum[fc] <= {ACC_WIDTH{1'b0}};
         end else if (flush) begin
-            for (ac = 0; ac < COLS; ac = ac + 1) begin
-                psum_latch[ac*ACC_WIDTH +: ACC_WIDTH] <= accum[ac];
-                accum[ac] <= {ACC_WIDTH{1'b0}};
+            for (fc = 0; fc < COLS; fc = fc + 1) begin
+                psum_latch[fc*ACC_WIDTH +: ACC_WIDTH] <= dot_valid ? accum[fc] + dot_ext(dot[fc]) : accum[fc];
+                accum[fc] <= {ACC_WIDTH{1'b0}};
             end
             psum_valid_r <= 1'b1;
         end else begin
             psum_valid_r <= 1'b0;
-            if (act_valid) begin
-                // next_acc is a per-column scratch sum, never a register:
-                // blocking assignment is intended here.
-                /* verilator lint_off BLKSEQ */
-                for (ac = 0; ac < COLS; ac = ac + 1) begin
-                    next_acc = accum[ac];
-                    for (ar = 0; ar < ROWS; ar = ar + 1)
-                        next_acc = next_acc + mac_product_ext(
-                            act_row_in[ar*DATA_WIDTH +: DATA_WIDTH],
-                            weight_reg[ac][ar]
-                        );
-                    accum[ac] <= next_acc;
-                    /* verilator lint_on BLKSEQ */
-                end
-            end
+            if (dot_valid)
+                for (fc = 0; fc < COLS; fc = fc + 1)
+                    accum[fc] <= accum[fc] + dot_ext(dot[fc]);
         end
     end
 
