@@ -9,6 +9,9 @@ IC-design workflow without inventing signoff artifacts.
 
 - RTL: `rtl/mac_cell.v`, `rtl/systolic_array.v`, `rtl/tensorrail_asic_top.v`
 - Top module: `tensorrail_asic_top`
+- Inputs are registered at the macro boundary (one cycle of latency), so every
+  timing path inside starts at a flop; `rtl/sim/tb_asic_top.v` checks the macro
+  matches the bare array one cycle later
 - PDK target: `sky130A`
 - Flow config: `openlane/tensorrail_mac_tile/config.json`
 - Pin order: `openlane/tensorrail_mac_tile/pin_order.cfg`

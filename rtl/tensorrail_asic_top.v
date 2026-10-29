@@ -35,6 +35,36 @@ module tensorrail_asic_top #(
     output wire                            psum_valid
 );
 
+    // ── Boundary registers ─────────────────────────────────────────────────────
+    // Every input is registered at the macro edge, so each timing path inside
+    // starts at a flop instead of at a port whose arrival time depends on the
+    // surrounding chip. All inputs shift by the same one cycle, so the array's
+    // behaviour is unchanged; act_ready follows the registered flush.
+    reg [DATA_WIDTH-1:0]      weight_data_q;
+    reg [$clog2(COLS)-1:0]    weight_col_sel_q;
+    reg                       weight_load_en_q;
+    reg [ROWS*DATA_WIDTH-1:0] act_row_in_q;
+    reg                       act_valid_q;
+    reg                       flush_q;
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            weight_data_q    <= {DATA_WIDTH{1'b0}};
+            weight_col_sel_q <= {$clog2(COLS){1'b0}};
+            weight_load_en_q <= 1'b0;
+            act_row_in_q     <= {(ROWS*DATA_WIDTH){1'b0}};
+            act_valid_q      <= 1'b0;
+            flush_q          <= 1'b0;
+        end else begin
+            weight_data_q    <= weight_data;
+            weight_col_sel_q <= weight_col_sel;
+            weight_load_en_q <= weight_load_en;
+            act_row_in_q     <= act_row_in;
+            act_valid_q      <= act_valid;
+            flush_q          <= flush;
+        end
+    end
+
     systolic_array #(
         .ROWS(ROWS),
         .COLS(COLS),
@@ -43,15 +73,15 @@ module tensorrail_asic_top #(
     ) u_array (
         .clk(clk),
         .rst_n(rst_n),
-        .weight_data(weight_data),
-        .weight_col_sel(weight_col_sel),
-        .weight_load_en(weight_load_en),
-        .act_row_in(act_row_in),
-        .act_valid(act_valid),
+        .weight_data(weight_data_q),
+        .weight_col_sel(weight_col_sel_q),
+        .weight_load_en(weight_load_en_q),
+        .act_row_in(act_row_in_q),
+        .act_valid(act_valid_q),
         .act_ready(act_ready),
         .psum_col_out(psum_col_out),
         .psum_valid(psum_valid),
-        .flush(flush)
+        .flush(flush_q)
     );
 
 endmodule
